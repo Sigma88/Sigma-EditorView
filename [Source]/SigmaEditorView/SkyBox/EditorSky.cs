@@ -34,6 +34,7 @@ namespace SigmaEditorViewPlugin
             scaled = scaled ?? new RenderTexture(Settings.size, Settings.size, 0) { name = "EditorSky.scaled", dimension = TextureDimension.Cube };
             camera.cullingMask = 1 << 9 | 1 << 10;
             camera.RenderToCubemap(scaled);
+            AmbientSettings.Update(camera);
             if (atmoBackUp == false) Atmosphere.SetActive(false);
 
             // CleanUp
@@ -43,6 +44,8 @@ namespace SigmaEditorViewPlugin
 
         internal static void Apply(EditorFacility editor)
         {
+            Debug.Log("EditorSky.Apply");
+
             RenderSettings.skybox.shader = ShaderLoader.shader;
 
             RenderSettings.skybox.SetTexture("_SkyBox", skybox);
@@ -75,17 +78,6 @@ namespace SigmaEditorViewPlugin
                 }
 
                 return _maxdistance ?? 0;
-            }
-        }
-
-        static void Export(Cubemap cube, string name)
-        {
-            for (int i = 0; i < 6; i++)
-            {
-                Texture2D texture = new Texture2D(Settings.size, Settings.size);
-                texture.SetPixels(cube.GetPixels((CubemapFace)i));
-                byte[] png = texture.EncodeToPNG();
-                System.IO.File.WriteAllBytes("GameData/Sigma/cube" + name + "_" + (CubemapFace)i + ".png", png);
             }
         }
     }

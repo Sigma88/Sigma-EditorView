@@ -7,11 +7,15 @@ namespace SigmaEditorViewPlugin
     {
         internal static void Apply(EditorFacility editor)
         {
+            Debug.Log("EditorColliders.Apply", "editor = " + editor);
+
             GameObject building;
             if (editor == EditorFacility.SPH)
                 building = GameObject.Find("SPHlvl1") ?? GameObject.Find("SPHlvl2") ?? GameObject.Find("SPHmodern");
             else
                 building = GameObject.Find("VABlvl2") ?? GameObject.Find("VABlvl3") ?? GameObject.Find("VABmodern");
+
+            Debug.Log("EditorColliders.Apply", "building = " + building);
 
             switch (building?.name)
             {
@@ -41,6 +45,8 @@ namespace SigmaEditorViewPlugin
 
         static void VABwalls(Vector3 position, Vector3 scale)
         {
+            Debug.Log("EditorColliders.VABwalls", "position = " + position + ", scale = " + scale);
+
             // Front Wall
             CreateCollider("VAB_Front_Wall", new Vector3(0, position.y, scale.z * 0.5f), new Vector3(position.x * 2, scale.y, 1));
             // Back Wall
@@ -55,6 +61,8 @@ namespace SigmaEditorViewPlugin
 
         static void SPHwalls(Vector3 position, Vector3 scale)
         {
+            Debug.Log("EditorColliders.SPHwalls", "position = " + position + ", scale = " + scale);
+
             // Back Wall
             CreateCollider("SPH_Back_Wall", new Vector3(position.x, position.y, -position.z), scale);
             // Left Wall
@@ -69,6 +77,8 @@ namespace SigmaEditorViewPlugin
 
         static void SPHcorners(Vector3 position, Vector3 scale, Vector3 rotation)
         {
+            Debug.Log("EditorColliders.SPHcorners", "position = " + position + ", scale = " + scale + ", rotation = " + rotation);
+
             // Left Corner
             CreateCollider("SPH_Left_Corner", position, scale, rotation);
             // Right Corner
@@ -77,6 +87,8 @@ namespace SigmaEditorViewPlugin
 
         static void CreateCollider(string name, Vector3 position, Vector3 scale, Vector3? rotation = null)
         {
+            Debug.Log("EditorColliders.CreateCollider", "name = " + name + "position = " + position + ", scale = " + scale + ", rotation = " + rotation);
+
             GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
             Object.DestroyImmediate(cube.GetComponent<Renderer>());
             cube.AddOrGetComponent<MeshCollider>();
@@ -96,8 +108,10 @@ namespace SigmaEditorViewPlugin
             }
             void Update()
             {
-                if (EditorDriver.editorFacility != editor || Input.GetKeyDown("space"))
+                if (EditorDriver.editorFacility != editor)
                 {
+                    Debug.Log("EditorColliders.Remover", "Destryoing gameObject = " + gameObject);
+
                     DestroyImmediate(gameObject);
                 }
             }
