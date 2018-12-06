@@ -12,6 +12,8 @@ namespace SigmaEditorViewPlugin
 
         internal static void Update()
         {
+            Debug.Log("EditorSky.Update");
+
             // Create GameObject and Camera
             GameObject marker = new GameObject("SigmaEditorView Camera");
             Camera camera = marker.AddOrGetComponent<Camera>();
@@ -25,16 +27,14 @@ namespace SigmaEditorViewPlugin
             camera.cullingMask = 1 << 18;
             camera.RenderToCubemap(skybox);
 
-            // ScaledSpace                
+            // ScaledSpace
             GameObject Atmosphere = FlightGlobals.GetHomeBody()?.scaledBody?.GetChild("Atmosphere");
             bool? atmoBackUp = Atmosphere?.activeSelf;
-            if (atmoBackUp == false)
-                Atmosphere.SetActive(true);
+            if (atmoBackUp == false) Atmosphere.SetActive(true);
             scaled = scaled ?? new RenderTexture(Settings.size, Settings.size, 0) { name = "EditorSky.scaled", dimension = TextureDimension.Cube };
             camera.cullingMask = 1 << 9 | 1 << 10;
             camera.RenderToCubemap(scaled);
-            if (atmoBackUp == false)
-                Atmosphere.SetActive(false);
+            if (atmoBackUp == false) Atmosphere.SetActive(false);
 
             // CleanUp
             Object.DestroyImmediate(camera);
