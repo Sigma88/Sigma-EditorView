@@ -31,12 +31,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="EditorView.cs" />
     <Compile Include="SkyBox\FlareCamera.cs" />
+    <Compile Include="Terrain\AmbientSettings.cs" />
     <Compile Include="Utility\DebugLogger.cs" />
     <Compile Include="SkyBox\EditorColliders.cs" />
     <Compile Include="SkyBox\EditorFlares.cs" />
     <Compile Include="SkyBox\EditorSky.cs" />
-    <Compile Include="EditorView.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utility\SettingsLoader.cs" />
     <Compile Include="Utility\ShaderLoader.cs" />
@@ -56,7 +57,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Buildings\" />
-    <Folder Include="Terrain\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
