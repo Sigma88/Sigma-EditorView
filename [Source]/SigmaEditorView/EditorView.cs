@@ -34,6 +34,7 @@ namespace SigmaEditorViewPlugin
             EditorSky.Apply(editor);
             EditorFlares.Apply(editor);
             EditorColliders.Apply(editor);
+            AmbientSettings.Apply(editor);
         }
 
         internal static Matrix4x4 GetMatrix(EditorFacility editor)
