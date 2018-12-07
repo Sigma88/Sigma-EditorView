@@ -60,7 +60,13 @@ namespace SigmaEditorViewPlugin
                     sunFlares[i].enabled = false;
 
                     // Instantiate LensFlare
+                    int oldDelegates = Camera.onPreCull.GetInvocationList().Length;               // KopernicusSunFlare compatibility
+
                     lensFlares[i] = Object.Instantiate(sunFlares[i].sunFlare);
+
+                    System.Delegate[] newDelegates = Camera.onPreCull.GetInvocationList();        // KopernicusSunFlare compatibility
+                    if (newDelegates.Length == oldDelegates + 1)                                  // KopernicusSunFlare compatibility
+                        Camera.onPreCull -= (Camera.CameraCallback)newDelegates[oldDelegates];    // KopernicusSunFlare compatibility
 
                     // Disable the clone
                     lensFlares[i].gameObject.SetActive(false);
