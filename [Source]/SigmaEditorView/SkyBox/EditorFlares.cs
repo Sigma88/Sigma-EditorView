@@ -24,6 +24,7 @@ namespace SigmaEditorViewPlugin
             int? n = lensFlares?.Length;
 
             Debug.Log("EditorFlares.Apply", "lensFlares found = " + n);
+            Debug.Log("EditorFlares.Apply", "rotations found = " + rotations?.Length);
 
             for (int i = 0; i < n; i++)
             {

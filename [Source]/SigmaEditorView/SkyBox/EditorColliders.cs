@@ -87,7 +87,7 @@ namespace SigmaEditorViewPlugin
 
         static void CreateCollider(string name, Vector3 position, Vector3 scale, Vector3? rotation = null)
         {
-            Debug.Log("EditorColliders.CreateCollider", "name = " + name + "position = " + position + ", scale = " + scale + ", rotation = " + rotation);
+            Debug.Log("EditorColliders.CreateCollider", "name = " + name + "position = " + position + ", scale = " + scale + ", rotation = " + (rotation ?? Vector3.zero));
 
             GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
             Object.DestroyImmediate(cube.GetComponent<Renderer>());
