@@ -8,8 +8,10 @@ namespace SigmaEditorViewPlugin
     {
         void Start()
         {
+            Debug.Log("SettingsLoader.Start");
+
             // User Settings
-            ConfigNode[] InfoNodes = UserSettings.ConfigNode.GetNodes("EditorView");
+            ConfigNode settings = UserSettings.ConfigNode;
         }
     }
 
