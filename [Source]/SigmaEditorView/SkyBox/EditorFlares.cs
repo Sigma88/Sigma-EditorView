@@ -28,8 +28,7 @@ namespace SigmaEditorViewPlugin
                     else
                         lensFlares[i].transform.rotation = EditorView.VABrot * rotations[i];
 
-                    if (Vector3.Angle(Vector3.up, -lensFlares[i].transform.forward) < 90)
-                        lensFlares[i].gameObject.SetActive(true);
+                    lensFlares[i].gameObject.SetActive(true);
                 }
                 Debug.Log("EditorFlares.Apply", "lensFlares[" + i + "] = " + lensFlares[i]);
                 Debug.Log("EditorFlares.Apply", "rotations[" + i + "] = " + rotations[i]);
