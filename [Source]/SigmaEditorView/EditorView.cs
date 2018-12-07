@@ -25,8 +25,12 @@ namespace SigmaEditorViewPlugin
             VABrot = Quaternion.LookRotation(ksc.right, ksc.up);
             SPHrot = Quaternion.LookRotation(Quaternion.AngleAxis(-30, ksc.up) * ksc.right, ksc.up);
 
+            // SkyBox
             EditorSky.Update();
             EditorFlares.Update();
+
+            // Terrain
+            EditorTerrain.Update();
         }
 
         internal static void Apply(EditorFacility editor)
@@ -34,7 +38,10 @@ namespace SigmaEditorViewPlugin
             EditorSky.Apply(editor);
             EditorFlares.Apply(editor);
             EditorColliders.Apply(editor);
+
+            // Terrain
             AmbientSettings.Apply(editor);
+            EditorTerrain.Apply(editor);
         }
 
         internal static Matrix4x4 GetMatrix(EditorFacility editor)

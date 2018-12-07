@@ -34,6 +34,7 @@
     <Compile Include="EditorView.cs" />
     <Compile Include="SkyBox\FlareCamera.cs" />
     <Compile Include="Terrain\AmbientSettings.cs" />
+    <Compile Include="Terrain\EditorTerrain.cs" />
     <Compile Include="Utility\DebugLogger.cs" />
     <Compile Include="SkyBox\EditorColliders.cs" />
     <Compile Include="SkyBox\EditorFlares.cs" />
