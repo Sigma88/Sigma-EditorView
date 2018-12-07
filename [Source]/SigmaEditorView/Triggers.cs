@@ -10,7 +10,7 @@ namespace SigmaEditorViewPlugin
         {
             if (Input.GetMouseButtonDown(0))
             {
-                Debug.Log("KSCTriggers.Update", "Detected left mouse button click");
+                Debug.Log("KSCTriggers.Update");
                 EditorView.Update();
             }
         }
@@ -23,13 +23,17 @@ namespace SigmaEditorViewPlugin
 
         void Start()
         {
-            Debug.Log("EditorTriggers.Start", "Editor = " + EditorDriver.editorFacility);
+            Debug.Log("EditorTriggers.Start");
 
             // Enable FlareLayer
             EditorCamera.Instance.cam.GetComponent<FlareLayer>().enabled = true;
 
             // Set Editor Facility
             editor = EditorDriver.editorFacility;
+
+            Debug.Log("EditorTriggers.Start", "editor = " + editor);
+
+            // Apply
             EditorView.Apply(editor);
         }
 
@@ -37,17 +41,19 @@ namespace SigmaEditorViewPlugin
         {
             if (EditorDriver.editorFacility != editor)
             {
-                Debug.Log("EditorTriggers.Update", "Editor Facility Changed To = " + EditorDriver.editorFacility);
-
-                // Set Editor Facility
+                // Change Editor Facility
                 editor = EditorDriver.editorFacility;
+
+                Debug.Log("EditorTriggers.Update", "Editor Facility Changed To = " + editor);
+
+                // Apply
                 EditorView.Apply(editor);
             }
         }
 
         void OnDestroy()
         {
-            Debug.Log("EditorTriggers.OnDestroy", "Editor = " + EditorDriver.editorFacility);
+            Debug.Log("EditorTriggers.OnDestroy");
             EditorFlares.DestroyAll();
         }
     }

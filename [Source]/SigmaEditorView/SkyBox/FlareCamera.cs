@@ -15,8 +15,12 @@ namespace SigmaEditorViewPlugin
 
         void Start()
         {
+            Debug.Log("FlareCamera.Start");
+
             flare = GetComponent<LensFlare>();
             maxBrightness = flare.brightness;
+
+            Debug.Log("FlareCamera.Start", "maxBrightness = " + maxBrightness);
         }
 
         void Update()

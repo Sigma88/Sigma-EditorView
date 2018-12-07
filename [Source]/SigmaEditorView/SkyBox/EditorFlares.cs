@@ -11,13 +11,19 @@ namespace SigmaEditorViewPlugin
 
         internal static void Update()
         {
+            Debug.Log("EditorFlares.Update");
+
             DestroyAll();
             Duplicate(Resources.FindObjectsOfTypeAll<SunFlare>());
         }
 
         internal static void Apply(EditorFacility editor)
         {
+            Debug.Log("EditorFlares.Apply", "editor = " + editor);
+
             int? n = lensFlares?.Length;
+
+            Debug.Log("EditorFlares.Apply", "lensFlares found = " + n);
 
             for (int i = 0; i < n; i++)
             {
@@ -38,6 +44,8 @@ namespace SigmaEditorViewPlugin
         internal static void DestroyAll()
         {
             int? n = lensFlares?.Length;
+
+            Debug.Log("EditorFlares.DestroyAll", "sunFlares found = " + n);
 
             for (int i = 0; i < n; i++)
             {

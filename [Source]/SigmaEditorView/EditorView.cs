@@ -21,6 +21,8 @@ namespace SigmaEditorViewPlugin
 
         internal static void Update()
         {
+            Debug.Log("EditorView.Update");
+
             Transform ksc = SpaceCenter.Instance.SpaceCenterTransform;
             VABrot = Quaternion.LookRotation(ksc.right, ksc.up);
             SPHrot = Quaternion.LookRotation(Quaternion.AngleAxis(-30, ksc.up) * ksc.right, ksc.up);
@@ -35,6 +37,9 @@ namespace SigmaEditorViewPlugin
 
         internal static void Apply(EditorFacility editor)
         {
+            Debug.Log("EditorView.Apply", "editor = " + editor);
+
+            // SkyBox
             EditorSky.Apply(editor);
             EditorFlares.Apply(editor);
             EditorColliders.Apply(editor);

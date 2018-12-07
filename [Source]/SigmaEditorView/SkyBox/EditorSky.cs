@@ -44,7 +44,7 @@ namespace SigmaEditorViewPlugin
 
         internal static void Apply(EditorFacility editor)
         {
-            Debug.Log("EditorSky.Apply");
+            Debug.Log("EditorSky.Apply", "editor = " + editor);
 
             RenderSettings.skybox.shader = ShaderLoader.shader;
 

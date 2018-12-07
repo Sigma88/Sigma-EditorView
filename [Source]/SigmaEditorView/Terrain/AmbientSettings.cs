@@ -9,7 +9,7 @@ namespace SigmaEditorViewPlugin
 
         internal static void Update(Camera camera)
         {
-            Debug.Log("AmbientSettings.Update");
+            Debug.Log("AmbientSettings.Update", "camera = " + camera);
 
             // BackUp
             RenderTexture backupRT = RenderTexture.active;
@@ -54,7 +54,7 @@ namespace SigmaEditorViewPlugin
 
         internal static void Apply(EditorFacility editor)
         {
-            Debug.Log("AmbientSettings.Apply");
+            Debug.Log("AmbientSettings.Apply", "editor = " + editor);
 
             RenderSettings.fogColor = fogColor;
         }
