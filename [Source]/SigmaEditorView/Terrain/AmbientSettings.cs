@@ -16,7 +16,6 @@ namespace SigmaEditorViewPlugin
             RenderTexture backupTex = camera.targetTexture;
             Vector3 backupPos = camera.transform.position;
             Quaternion backupRot = camera.transform.rotation;
-            Color backupCol = camera.backgroundColor;
             int backupMask = camera.cullingMask;
             float backupFOV = camera.fieldOfView;
 
@@ -27,9 +26,8 @@ namespace SigmaEditorViewPlugin
 
             // Setup Camera
             Transform ksc = SpaceCenter.Instance.SpaceCenterTransform;
-            camera.transform.position = ksc.position;
+            camera.transform.position = Vector3.zero;
             camera.transform.rotation = Quaternion.LookRotation(ksc.right, ksc.up);
-            camera.backgroundColor = Color.black;
             camera.cullingMask = 1 << 9;
             camera.fieldOfView = 0.05f;
 
@@ -46,7 +44,6 @@ namespace SigmaEditorViewPlugin
             camera.targetTexture = backupTex;
             camera.transform.position = backupPos;
             camera.transform.rotation = backupRot;
-            camera.backgroundColor = backupCol;
             camera.cullingMask = backupMask;
             camera.fieldOfView = backupFOV;
 
