@@ -49,6 +49,11 @@ namespace SigmaEditorViewPlugin
                 // Apply
                 EditorView.Apply(editor);
             }
+
+            if (Debug.debug && Input.GetKeyDown("space"))
+            {
+                EditorColliders.Apply(EditorDriver.editorFacility);
+            }
         }
 
         void OnDestroy()
