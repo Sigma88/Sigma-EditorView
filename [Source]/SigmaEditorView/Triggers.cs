@@ -50,7 +50,7 @@ namespace SigmaEditorViewPlugin
                 EditorView.Apply(editor);
             }
 
-            if (Debug.debug && Input.GetKeyDown("space"))
+            if (Debug.debug && Input.GetKeyDown(KeyCode.Space))
             {
                 EditorColliders.Apply(EditorDriver.editorFacility);
             }
