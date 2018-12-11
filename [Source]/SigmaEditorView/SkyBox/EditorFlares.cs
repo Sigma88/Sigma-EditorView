@@ -76,7 +76,7 @@ namespace SigmaEditorViewPlugin
                     sunFlares[i].enabled = false;
 
                     // Instantiate LensFlare
-                    int oldDelegates = Camera.onPreCull.GetInvocationList().Length;               // KopernicusSunFlare compatibility
+                    int oldDelegates = Camera.onPreCull?.GetInvocationList()?.Length ?? 0;              // KopernicusSunFlare compatibility
 
                     lensFlares[i] = Object.Instantiate(sunFlares[i].sunFlare);
 
@@ -86,9 +86,9 @@ namespace SigmaEditorViewPlugin
                     // Remove SunFlare component from the clone
                     Object.DestroyImmediate(lensFlares[i].GetComponent<SunFlare>());
 
-                    System.Delegate[] newDelegates = Camera.onPreCull.GetInvocationList();        // KopernicusSunFlare compatibility
-                    if (newDelegates.Length == oldDelegates + 1)                                  // KopernicusSunFlare compatibility
-                        Camera.onPreCull -= (Camera.CameraCallback)newDelegates[oldDelegates];    // KopernicusSunFlare compatibility
+                    System.Delegate[] newDelegates = Camera.onPreCull?.GetInvocationList();             // KopernicusSunFlare compatibility
+                    if (newDelegates?.Length == oldDelegates + 1)                                       // KopernicusSunFlare compatibility
+                        Camera.onPreCull -= (Camera.CameraCallback)newDelegates[oldDelegates];          // KopernicusSunFlare compatibility
 
                     // Reposition the GameObject
                     lensFlares[i].transform.SetParent(sunFlares[i].transform.parent);
