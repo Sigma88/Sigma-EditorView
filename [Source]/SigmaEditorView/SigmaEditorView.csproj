@@ -34,6 +34,7 @@
     <Compile Include="EditorView.cs" />
     <Compile Include="SkyBox\FlareCamera.cs" />
     <Compile Include="Terrain\AmbientSettings.cs" />
+    <Compile Include="Terrain\EditorBuildings.cs" />
     <Compile Include="Terrain\EditorTerrain.cs" />
     <Compile Include="Utility\DebugLogger.cs" />
     <Compile Include="SkyBox\EditorColliders.cs" />
@@ -57,9 +58,7 @@
       <HintPath>..\..\..\[References]\KerbalSpaceProgram\UnityEngine.dll</HintPath>
     </Reference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Buildings\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
