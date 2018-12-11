@@ -56,6 +56,19 @@ namespace SigmaEditorViewPlugin
         {
             Debug.Log("AmbientSettings.Apply", "editor = " + editor);
 
+            // Fix the sceneryCam
+            Camera sceneryCam = EditorCamera.Instance?.gameObject?.GetChild("sceneryCam")?.GetComponent<Camera>();
+            Debug.Log("AmbientSettings.Apply", "sceneryCam = " + sceneryCam);
+
+            if (sceneryCam != null)
+            {
+                sceneryCam.nearClipPlane = 0.45f;
+                sceneryCam.farClipPlane = 2000;
+            }
+
+            // Fix the fog
+            RenderSettings.fogStartDistance = 900; //float.Parse(System.IO.File.ReadAllLines("GameData/Sigma/dy.txt")[0]);
+            RenderSettings.fogEndDistance = 1800; //float.Parse(System.IO.File.ReadAllLines("GameData/Sigma/dy.txt")[1]);
             RenderSettings.fogColor = fogColor;
 
             Debug.Log("AmbientSettings.Apply", "RenderSettings.fogColor = " + RenderSettings.fogColor);
