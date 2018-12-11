@@ -18,6 +18,20 @@ namespace SigmaEditorViewPlugin
             get { return _SPHrot; }
             set { _SPHrot = Quaternion.LookRotation(Vector3.forward, Vector3.up) * Quaternion.Inverse(value); }
         }
+        internal static Quaternion Rotation
+        {
+            get
+            {
+                if (EditorDriver.editorFacility == EditorFacility.SPH)
+                {
+                    return SPHrot;
+                }
+                else
+                {
+                    return VABrot;
+                }
+            }
+        }
 
         internal static void Update()
         {

@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using Object = UnityEngine.Object;
 
 
 namespace SigmaEditorViewPlugin
@@ -30,11 +29,7 @@ namespace SigmaEditorViewPlugin
             {
                 if (lensFlares[i]?.gameObject != null)
                 {
-                    if (editor == EditorFacility.SPH)
-                        lensFlares[i].transform.rotation = EditorView.SPHrot * rotations[i];
-                    else
-                        lensFlares[i].transform.rotation = EditorView.VABrot * rotations[i];
-
+                    lensFlares[i].transform.rotation = EditorView.Rotation * rotations[i];
                     lensFlares[i].gameObject.SetActive(true);
                 }
                 Debug.Log("EditorFlares.Apply", "lensFlares[" + i + "] = " + lensFlares[i]);
