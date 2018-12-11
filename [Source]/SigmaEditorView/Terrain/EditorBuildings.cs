@@ -124,7 +124,6 @@ namespace SigmaEditorViewPlugin
 
                     // Check distance from KSC
                     double distance = relativePosition.magnitude;
-                    Debug.Log("EditorBuildings.Duplicate", "pqsMod = " + pqsMod + ", distance = " + distance);
 
                     // If the PQSMod is within the chosen range
                     if (pqsMod != ksc && distance < 2000)
