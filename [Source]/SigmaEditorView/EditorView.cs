@@ -56,5 +56,12 @@ namespace SigmaEditorViewPlugin
             else
                 return Matrix4x4.TRS(Vector3.zero, VABrot, Vector3.one);
         }
+
+        internal static void OnDestroy()
+        {
+            Debug.Log("EditorView.OnDestroy");
+            EditorFlares.DisableAll();
+            EditorBuildings.DisableAll();
+        }
     }
 }

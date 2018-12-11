@@ -59,7 +59,7 @@ namespace SigmaEditorViewPlugin
         void OnDestroy()
         {
             Debug.Log("EditorTriggers.OnDestroy");
-            EditorFlares.DestroyAll();
+            EditorView.OnDestroy();
         }
     }
 }

@@ -42,7 +42,19 @@ namespace SigmaEditorViewPlugin
             }
         }
 
-        internal static void DestroyAll()
+        internal static void DisableAll()
+        {
+            int? n = lensFlares?.Length;
+
+            Debug.Log("EditorFlares.DisableAll", "sunFlares found = " + n);
+
+            for (int i = 0; i < n; i++)
+            {
+                try { lensFlares[i].gameObject.SetActive(false); } catch { }
+            }
+        }
+
+        static void DestroyAll()
         {
             int? n = lensFlares?.Length;
 
