@@ -1,3 +1,10 @@
+**v0.2.0**
+
+- Added buildings near the KSC
+- Added distant ground features
+- Fixed missing LensFlares
+
+
 **v0.1.0**
 
 - First Beta Release

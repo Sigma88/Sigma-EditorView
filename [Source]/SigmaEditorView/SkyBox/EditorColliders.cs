@@ -233,7 +233,7 @@ namespace SigmaEditorViewPlugin
 
             void Update()
             {
-                if (EditorDriver.editorFacility != editor || (Debug.debug && Input.GetKeyDown("space")))
+                if (EditorDriver.editorFacility != editor || (Debug.debug && Input.GetKeyDown(KeyCode.Space)))
                 {
                     Debug.Log("EditorColliders.Remover", "Destryoing gameObject = " + gameObject);
 

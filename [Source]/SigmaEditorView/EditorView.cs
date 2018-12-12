@@ -18,6 +18,20 @@ namespace SigmaEditorViewPlugin
             get { return _SPHrot; }
             set { _SPHrot = Quaternion.LookRotation(Vector3.forward, Vector3.up) * Quaternion.Inverse(value); }
         }
+        internal static Quaternion Rotation
+        {
+            get
+            {
+                if (EditorDriver.editorFacility == EditorFacility.SPH)
+                {
+                    return SPHrot;
+                }
+                else
+                {
+                    return VABrot;
+                }
+            }
+        }
 
         internal static void Update()
         {
@@ -32,6 +46,8 @@ namespace SigmaEditorViewPlugin
             EditorFlares.Update();
 
             // Terrain
+            AmbientSettings.Update();
+            EditorBuildings.Update();
             EditorTerrain.Update();
         }
 
@@ -47,6 +63,7 @@ namespace SigmaEditorViewPlugin
             // Terrain
             AmbientSettings.Apply(editor);
             EditorTerrain.Apply(editor);
+            EditorBuildings.Apply(editor);
         }
 
         internal static Matrix4x4 GetMatrix(EditorFacility editor)
@@ -55,6 +72,13 @@ namespace SigmaEditorViewPlugin
                 return Matrix4x4.TRS(Vector3.zero, SPHrot, Vector3.one);
             else
                 return Matrix4x4.TRS(Vector3.zero, VABrot, Vector3.one);
+        }
+
+        internal static void OnDestroy()
+        {
+            Debug.Log("EditorView.OnDestroy");
+            EditorFlares.DisableAll();
+            EditorBuildings.DisableAll();
         }
     }
 }
