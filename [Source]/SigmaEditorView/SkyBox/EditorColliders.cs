@@ -8,8 +8,8 @@ namespace SigmaEditorViewPlugin
     {
         static Dictionary<string, Vector3[]> walls = new Dictionary<string, Vector3[]>
         {
-            { "SPHlvl1", new Vector3[] { new Vector3(0, 9.3f, 0), new Vector3(50, 18, 71.25f) } },
-            { "SPHlvl2", new Vector3[] { new Vector3(0, 12, 0), new Vector3(65, 23.5f, 85) } },
+            { "SPHlvl1", new Vector3[] { new Vector3(0, 9f, 0), new Vector3(50, 18, 71.25f) } },
+            { "SPHlvl2", new Vector3[] { new Vector3(0, 11.75f, 0), new Vector3(65, 23.5f, 85) } },
             { "SPHmodern", new Vector3[] { new Vector3(0, 19, 0), new Vector3(100, 38, 122) } },
             { "VABlvl2", new Vector3[] { new Vector3(0, 32, 0), new Vector3(58.5f, 64, 60) } },
             { "VABlvl3", new Vector3[] { new Vector3(0, 42.5f, 0), new Vector3(77, 85, 70) } },
@@ -83,17 +83,17 @@ namespace SigmaEditorViewPlugin
             return new GameObject[]
             {
                 // Left Wall
-                CreateCollider(name + "_Left_Wall", position.dX(-scale.x * 0.5f), scale.X(1)),
+                CreateCollider(name + "_Left_Wall", position.dX(position.x - scale.x * 0.5f), scale.X(1)),
                 // Right Wall
-                CreateCollider(name + "_Right_Wall", position.dX(scale.x * 0.5f), scale.X(1)),
+                CreateCollider(name + "_Right_Wall", position.dX(position.x + scale.x * 0.5f), scale.X(1)),
                 // Bottom Wall
-                CreateCollider(name + "_Bottom_Wall", position.Y(0), scale.Y(1)),
+                CreateCollider(name + "_Bottom_Wall", position.Y(position.y - scale.y * 0.5f), scale.Y(1)),
                 // Top Wall
-                CreateCollider(name + "_Top_Wall", position.Y(scale.y), scale.Y(1)),
+                CreateCollider(name + "_Top_Wall", position.Y(position.y + scale.y * 0.5f), scale.Y(1)),
                 // Back Wall
-                CreateCollider(name + "_Back_Wall", position.dZ(-scale.z * 0.5f), scale.Z(1)),
+                CreateCollider(name + "_Back_Wall", position.dZ(position.z - scale.z * 0.5f), scale.Z(1)),
                 // Front Wall
-                CreateCollider(name + "_Front_Wall", position.dZ(scale.z * 0.5f), scale.Z(1))
+                CreateCollider(name + "_Front_Wall", position.dZ(position.z + scale.z * 0.5f), scale.Z(1))
             };
         }
 
