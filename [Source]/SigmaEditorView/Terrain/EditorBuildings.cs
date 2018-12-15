@@ -101,9 +101,14 @@ namespace SigmaEditorViewPlugin
             PQSCity ksc = SpaceCenter.Instance?.SpaceCenterTransform?.parent?.GetComponentInChildren<PQSCity>();
             if (ksc == null) return;
 
-            // Find VAB
-            GameObject vab = ksc.GetComponentInChildren<VehicleAssemblyBuilding>().gameObject;
-            Vector3 VABposition = vab.transform.position - vab.transform.up.normalized * 2;
+            // VAB position
+            Vector3 VABposition = ksc.transform.position +
+                                  ksc.transform.right.normalized * -186.3f +
+                                  ksc.transform.up.normalized * +24.8f;
+            // SPH position
+            SPHposition = ksc.transform.right.normalized * -157.6f +
+                          ksc.transform.up.normalized * -0.1f +
+                          ksc.transform.forward.normalized * 263.5f;
 
             // Find Radius
             float radius = (float)FlightGlobals.GetHomeBody().Radius;
@@ -172,9 +177,6 @@ namespace SigmaEditorViewPlugin
             rotations = quaternions.ToArray();
             Debug.Log("EditorBuildings.Duplicate", "rotations count = " + rotations?.Length);
 
-            // Store SPH position
-            GameObject sph = ksc.GetComponentInChildren<SpacePlaneHangarBuilding>().gameObject;
-            SPHposition = (sph.transform.position - sph.transform.up.normalized * 1) - VABposition;
         }
     }
 }
