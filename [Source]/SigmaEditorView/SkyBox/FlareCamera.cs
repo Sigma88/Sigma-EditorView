@@ -29,7 +29,7 @@ namespace SigmaEditorViewPlugin
             }
         }
 
-        void Update()
+        void LateUpdate()
         {
             CheckHidden();
 
@@ -47,7 +47,7 @@ namespace SigmaEditorViewPlugin
 
         void CheckHidden()
         {
-            hidden = Physics.Raycast(EditorCamera.Instance.transform.position, flare.transform.forward * -5000, Mathf.Infinity, layerMask);//, out RaycastHit hit, Mathf.Infinity, layerMask); // DateTime.Now.Second % 20 < 10;
+            hidden = Physics.Raycast(EditorCamera.Instance.transform.position, flare.transform.forward.normalized * -5000, Mathf.Infinity, layerMask);
         }
 
         void Show()
@@ -68,23 +68,29 @@ namespace SigmaEditorViewPlugin
                 flare.brightness = 0;
         }
 
+        LineRenderer line;
+
         void Track()
         {
             if (Debug.debug)
             {
-                Color color = hidden ? Color.red : Color.green;
-                GameObject myLine = new GameObject();
-                myLine.transform.position = EditorCamera.Instance.transform.position;
-                myLine.AddComponent<LineRenderer>();
-                LineRenderer lr = myLine.GetComponent<LineRenderer>();
-                lr.material = new Material(Shader.Find("Particles/Alpha Blended Premultiply"));
-                lr.startColor = color;
-                lr.endColor = color;
-                lr.startWidth = 0.1f;
-                lr.endWidth = 0.1f;
-                lr.SetPosition(0, EditorCamera.Instance.transform.position);
-                lr.SetPosition(1, flare.transform.forward * -5000);
-                Destroy(myLine, 0.1f);
+                if (line == null)
+                {
+                    GameObject myLine = new GameObject("lineRenderer");
+                    line = myLine.AddOrGetComponent<LineRenderer>();
+                    line.transform.position = Camera.main.transform.position + Camera.main.transform.forward.normalized;
+                    line.material = new Material(Shader.Find("Particles/Alpha Blended Premultiply"));
+                    line.startWidth = 0.02f;
+                    line.endWidth = 25f;
+                }
+
+                if (Camera.main?.transform != null)
+                    line.SetPosition(0, Camera.main.transform.position + Camera.main.transform.forward.normalized);
+
+                if (transform != null)
+                    line.SetPosition(1, transform.forward.normalized * -5000);
+
+                line.startColor = line.endColor = hidden ? Color.red : Color.green;
             }
         }
     }
