@@ -21,6 +21,12 @@ namespace SigmaEditorViewPlugin
             maxBrightness = flare.brightness;
 
             Debug.Log("FlareCamera.Start", "maxBrightness = " + maxBrightness);
+
+            FlareRemover remover = GetComponent<FlareRemover>();
+            if (remover != null)
+            {
+                DestroyImmediate(remover);
+            }
         }
 
         void Update()

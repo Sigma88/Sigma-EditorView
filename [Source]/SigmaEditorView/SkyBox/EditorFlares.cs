@@ -72,6 +72,9 @@ namespace SigmaEditorViewPlugin
             {
                 if (sunFlares[i]?.enabled == true)
                 {
+                    // Add FlareRemover component
+                    sunFlares[i].sunFlare.gameObject.AddOrGetComponent<FlareRemover>();
+
                     // Disable the original SunFlare component
                     sunFlares[i].enabled = false;
 
