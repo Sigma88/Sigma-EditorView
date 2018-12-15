@@ -6,11 +6,12 @@ namespace SigmaEditorViewPlugin
     internal class FlareRemover : MonoBehaviour
     {
         LensFlare flare;
-        bool skip;
+        bool skip = true;
 
         void Awake()
         {
             flare = GetComponent<LensFlare>();
+            Debug.Log("FlareRemover.Awake", "flare = " + flare);
 
             if (flare?.enabled != true)
             {
