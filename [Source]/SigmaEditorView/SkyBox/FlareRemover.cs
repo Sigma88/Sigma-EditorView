@@ -32,6 +32,7 @@ namespace SigmaEditorViewPlugin
             if (!skip)
             {
                 flare.enabled = skip = true;
+                DestroyImmediate(this);
             }
         }
 
