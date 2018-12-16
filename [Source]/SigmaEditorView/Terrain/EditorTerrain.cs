@@ -80,6 +80,9 @@ namespace SigmaEditorViewPlugin
 
             if (groundObject != null)
             {
+                groundObject.layer = 0;
+                Debug.Log("EditorTerrain.Apply", "Set groundObject.layer = " + groundObject.layer);
+
                 MeshCollider groundCollider = groundObject.AddOrGetComponent<MeshCollider>();
                 Debug.Log("EditorTerrain.Apply", "groundCollider = " + groundCollider);
 
