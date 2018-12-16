@@ -49,6 +49,7 @@ namespace SigmaEditorViewPlugin
             AmbientSettings.Update();
             EditorBuildings.Update();
             EditorTerrain.Update();
+            EditorShadows.Update();
         }
 
         internal static void Apply(EditorFacility editor)
@@ -64,6 +65,7 @@ namespace SigmaEditorViewPlugin
             AmbientSettings.Apply(editor);
             EditorTerrain.Apply(editor);
             EditorBuildings.Apply(editor);
+            EditorShadows.Apply(editor);
         }
 
         internal static Matrix4x4 GetMatrix(EditorFacility editor)
