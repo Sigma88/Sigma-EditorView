@@ -36,6 +36,7 @@
     <Compile Include="SkyBox\FlareRemover.cs" />
     <Compile Include="Terrain\AmbientSettings.cs" />
     <Compile Include="Terrain\EditorBuildings.cs" />
+    <Compile Include="Terrain\EditorShadows.cs" />
     <Compile Include="Terrain\EditorTerrain.cs" />
     <Compile Include="Terrain\LightTracker.cs" />
     <Compile Include="Utility\DebugLogger.cs" />
