@@ -29,12 +29,20 @@ namespace SigmaEditorViewPlugin
             }
 
             GameObject shadowsObject = GameObject.Find("Shadow Light") ?? GameObject.Find("Realtime_Shadow Light");
-            Debug.Log("EditorShadows.Apply", "lightObject = " + shadowsObject);
+            Debug.Log("EditorShadows.Apply", "shadowsObject = " + shadowsObject);
 
             if (shadowsObject != null)
             {
                 shadowsObject.transform.rotation = EditorView.Rotation * lightDirection;
                 shadowsObject.AddOrGetComponent<LightTracker>();
+            }
+
+            GameObject shadowPlane = GameObject.Find("ShadowPlane");
+            Debug.Log("EditorShadows.Apply", "shadowPlane = " + shadowPlane);
+
+            if (shadowPlane != null)
+            {
+                shadowPlane.transform.localScale *= 100;
             }
         }
     }
