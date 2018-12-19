@@ -150,7 +150,7 @@ namespace SigmaEditorViewPlugin
 
                         // Change to Layer 0
                         clone.SetLayerRecursive(0);
-                        
+
                         // Remove PQSMod component from the clone
                         Object.DestroyImmediate(clone.GetComponent<PQSMod>());
 
