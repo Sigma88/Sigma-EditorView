@@ -63,8 +63,9 @@ namespace SigmaEditorViewPlugin
             // Terrain
             AmbientSettings.Apply(editor);
             EditorTerrain.Apply(editor);
-            EditorBuildings.Apply(editor);
+            EditorLight.Apply(editor);
             EditorShadows.Apply(editor);
+            EditorBuildings.Apply(editor);
         }
 
         internal static Matrix4x4 GetMatrix(EditorFacility editor)
