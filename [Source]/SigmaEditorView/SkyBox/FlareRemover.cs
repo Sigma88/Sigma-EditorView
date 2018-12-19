@@ -19,7 +19,12 @@ namespace SigmaEditorViewPlugin
             }
         }
 
-        void LateUpdate()
+        void Start()
+        {
+            TimingManager.LateUpdateAdd(TimingManager.TimingStage.BetterLateThanNever, LaterUpdate);
+        }
+
+        void LaterUpdate()
         {
             if (HighLogic.LoadedScene == GameScenes.EDITOR)
             {
@@ -59,6 +64,11 @@ namespace SigmaEditorViewPlugin
                 if (transform != null)
                     line.SetPosition(1, transform.forward * -5000);
             }
+        }
+
+        void OnDestroy()
+        {
+            TimingManager.LateUpdateRemove(TimingManager.TimingStage.BetterLateThanNever, LaterUpdate);
         }
     }
 }
