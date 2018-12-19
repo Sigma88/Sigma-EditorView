@@ -70,10 +70,13 @@ namespace SigmaEditorViewPlugin
 
             for (int i = 0; i < n; i++)
             {
-                if (sunFlares[i]?.enabled == true)
+                if (sunFlares[i]?.isActiveAndEnabled == true)
                 {
                     // Add FlareRemover component
                     sunFlares[i].sunFlare.gameObject.AddOrGetComponent<FlareRemover>();
+
+                    // Duplicate only visible LenseFlare objects
+                    if (Physics.RaycastAll(ScaledSpace.LocalToScaledSpace(Camera.main.transform.position), ScaledSpace.LocalToScaledSpace(sunFlares[i].sun.transform.position), Mathf.Infinity, 1 << 10).Length > 1) continue;
 
                     // Disable the original SunFlare component
                     sunFlares[i].enabled = false;
