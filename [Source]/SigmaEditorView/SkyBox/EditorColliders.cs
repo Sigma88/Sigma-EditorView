@@ -1,19 +1,29 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 
 namespace SigmaEditorViewPlugin
 {
     internal static class EditorColliders
     {
-        static Dictionary<string, Vector3[]> walls = new Dictionary<string, Vector3[]>
+        static Dictionary<string, Vector3[]> innerWalls = new Dictionary<string, Vector3[]>
         {
-            { "SPHlvl1", new Vector3[] { new Vector3(0, 9.3f, 0), new Vector3(50, 18, 71.25f) } },
-            { "SPHlvl2", new Vector3[] { new Vector3(0, 12, 0), new Vector3(65, 23.5f, 85) } },
+            { "SPHlvl1", new Vector3[] { new Vector3(0, 9f, 0), new Vector3(50, 18, 71.25f) } },
+            { "SPHlvl2", new Vector3[] { new Vector3(0, 11.75f, 0), new Vector3(65, 23.5f, 85) } },
             { "SPHmodern", new Vector3[] { new Vector3(0, 19, 0), new Vector3(100, 38, 122) } },
             { "VABlvl2", new Vector3[] { new Vector3(0, 32, 0), new Vector3(58.5f, 64, 60) } },
             { "VABlvl3", new Vector3[] { new Vector3(0, 42.5f, 0), new Vector3(77, 85, 70) } },
             { "VABmodern", new Vector3[] { new Vector3(0, 37.5f, 0), new Vector3(67.5f, 75, 55) } }
+        };
+        static Dictionary<string, Vector3[]> outerWalls = new Dictionary<string, Vector3[]>
+        {
+            { "SPHlvl1", new Vector3[] { new Vector3(0, 9f, 0), new Vector3(51, 19, 71.25f) } },
+            { "SPHlvl2", new Vector3[] { new Vector3(0, 13, 0), new Vector3(75, 32, 85) } },
+            { "SPHmodern", new Vector3[] { new Vector3(0, 19, 0), new Vector3(110, 42, 122) } },
+            { "VABlvl2", new Vector3[] { new Vector3(0, 32, 0), new Vector3(58.5f, 68, 65) } },
+            { "VABlvl3", new Vector3[] { new Vector3(0, 43, 0), new Vector3(77, 88, 75) } },
+            { "VABmodern", new Vector3[] { new Vector3(0, 43f, 0), new Vector3(67.5f, 90, 65) } }
         };
 
         static Dictionary<string, Vector3[]> doors = new Dictionary<string, Vector3[]>
@@ -37,7 +47,7 @@ namespace SigmaEditorViewPlugin
         {
             Debug.Log("EditorColliders.Apply", "editor = " + editor);
 
-            if (Debug.debug) { DebugColliders(); }
+            if (Debug.debug) { DebugColliders(); DebugShadows(); }
 
             GameObject building;
             if (editor == EditorFacility.SPH)
@@ -49,10 +59,11 @@ namespace SigmaEditorViewPlugin
 
             string name = building?.name;
 
-            if (walls.ContainsKey(name) && doors.ContainsKey(name))
+            if (innerWalls.ContainsKey(name) && doors.ContainsKey(name))
             {
                 // Create Walls
-                GameObject[] box = Box(name, walls[name][0], walls[name][1]);
+                GameObject[] box = Box(name, innerWalls[name][0], innerWalls[name][1]);
+                GameObject[] shadows = Box(name, outerWalls[name][0], outerWalls[name][1], true);
 
                 // Cut out Door
                 switch (name)
@@ -61,45 +72,48 @@ namespace SigmaEditorViewPlugin
                     case "SPHlvl2":
                     case "SPHmodern":
                         Door(box[5], doors[name][0], doors[name][1]);
+                        Door(shadows[5], doors[name][0], doors[name][1], true);
                         break;
                     case "VABlvl2":
                     case "VABlvl3":
                     case "VABmodern":
                         Door(box[1], doors[name][0], doors[name][1]);
+                        Door(shadows[1], doors[name][0], doors[name][1], true);
                         break;
                 }
 
                 if (corners.ContainsKey(name))
                 {
                     Corners(name, corners[name][0], corners[name][1], corners[name][2]);
+                    Corners(name, corners[name][0], corners[name][1], corners[name][2], true);
                 }
             }
         }
 
-        static GameObject[] Box(string name, Vector3 position, Vector3 scale)
+        static GameObject[] Box(string name, Vector3 position, Vector3 scale, bool shadows = false)
         {
-            Debug.Log("EditorColliders.Box", "position = " + position + ", scale = " + scale);
+            Debug.Log("EditorColliders.Box", "position = " + position + ", scale = " + scale + ", shadows = " + shadows);
 
             return new GameObject[]
             {
                 // Left Wall
-                CreateCollider(name + "_Left_Wall", position.dX(-scale.x * 0.5f), scale.X(1)),
+                CreateCollider(name + "_Left_Wall", position.dX(position.x - scale.x * 0.5f), scale.X(1), null, shadows),
                 // Right Wall
-                CreateCollider(name + "_Right_Wall", position.dX(scale.x * 0.5f), scale.X(1)),
+                CreateCollider(name + "_Right_Wall", position.dX(position.x + scale.x * 0.5f), scale.X(1), null, shadows),
                 // Bottom Wall
-                CreateCollider(name + "_Bottom_Wall", position.Y(0), scale.Y(1)),
+                CreateCollider(name + "_Bottom_Wall", position.Y(position.y - scale.y * 0.5f), scale.Y(1), null, shadows),
                 // Top Wall
-                CreateCollider(name + "_Top_Wall", position.Y(scale.y), scale.Y(1)),
+                CreateCollider(name + "_Top_Wall", position.Y(position.y + scale.y * 0.5f), scale.Y(1), null, shadows),
                 // Back Wall
-                CreateCollider(name + "_Back_Wall", position.dZ(-scale.z * 0.5f), scale.Z(1)),
+                CreateCollider(name + "_Back_Wall", position.dZ(position.z - scale.z * 0.5f), scale.Z(1), null, shadows),
                 // Front Wall
-                CreateCollider(name + "_Front_Wall", position.dZ(scale.z * 0.5f), scale.Z(1))
+                CreateCollider(name + "_Front_Wall", position.dZ(position.z + scale.z * 0.5f), scale.Z(1), null, shadows)
             };
         }
 
-        static void Door(GameObject wall, Vector3 position, Vector3 scale)
+        static void Door(GameObject wall, Vector3 position, Vector3 scale, bool shadows = false)
         {
-            Debug.Log("EditorColliders.Door", "wall = " + wall + ", position = " + position + ", scale = " + scale);
+            Debug.Log("EditorColliders.Door", "wall = " + wall + ", position = " + position + ", scale = " + scale + ", shadows = " + shadows);
 
             if (scale.y > 0)
             {
@@ -108,8 +122,9 @@ namespace SigmaEditorViewPlugin
                 CreateCollider
                 (
                     wall.name + "_A",
-                    wall.transform.position.dY(scale.y * 0.5f),
-                    wall.transform.localScale.dY(-scale.y)
+                    wall.transform.position.Y(((wall.transform.position.y + wall.transform.localScale.y * 0.5f) + (position.y + scale.y * 0.5f)) * 0.5f),
+                    wall.transform.localScale.Y((wall.transform.position.y + wall.transform.localScale.y * 0.5f) - (position.y + scale.y * 0.5f)),
+                    null, shadows
                 );
 
                 // SPH
@@ -119,7 +134,8 @@ namespace SigmaEditorViewPlugin
                     (
                         wall.name + "_B",
                         wall.transform.position.X((-wall.transform.localScale.x + position.x * 2 - scale.x) * 0.25f),
-                        wall.transform.localScale.X((wall.transform.localScale.x + position.x * 2 - scale.x) * 0.5f)
+                        wall.transform.localScale.X((wall.transform.localScale.x + position.x * 2 - scale.x) * 0.5f),
+                        null, shadows
                     );
 
                     wall.name += "_C";
@@ -138,7 +154,8 @@ namespace SigmaEditorViewPlugin
                     (
                         wall.name + "_B",
                         wall.transform.position.Z((-wall.transform.localScale.z + position.z * 2 - scale.z) * 0.25f),
-                        wall.transform.localScale.Z((wall.transform.localScale.z + position.z * 2 - scale.z) * 0.5f)
+                        wall.transform.localScale.Z((wall.transform.localScale.z + position.z * 2 - scale.z) * 0.5f),
+                        null, shadows
                     );
 
                     wall.name += "_C";
@@ -150,28 +167,41 @@ namespace SigmaEditorViewPlugin
             }
         }
 
-        static void Corners(string name, Vector3 position, Vector3 scale, Vector3 rotation)
+        static void Corners(string name, Vector3 position, Vector3 scale, Vector3 rotation, bool shadows = false)
         {
-            Debug.Log("EditorColliders.Corners", "position = " + position + ", scale = " + scale + ", rotation = " + rotation);
+            Debug.Log("EditorColliders.Corners", "position = " + position + ", scale = " + scale + ", rotation = " + rotation + ", shadows = " + shadows);
 
             // Corner A
-            CreateCollider(name + "_Corner_A", position, scale, rotation);
+            CreateCollider(name + "_Corner_A", position, scale, rotation, shadows);
             // Corner B
             if (name.StartsWith("SPH"))
-                CreateCollider(name + "_Corner_B", position.X(-position.x), scale, rotation.Z(-rotation.z));
+                CreateCollider(name + "_Corner_B", position.X(-position.x), scale, rotation.Z(-rotation.z), shadows);
             else
-                CreateCollider(name + "_Corner_B", position.Z(-position.z), scale, rotation.X(-rotation.x));
+                CreateCollider(name + "_Corner_B", position.Z(-position.z), scale, rotation.X(-rotation.x), shadows);
         }
 
-        static GameObject CreateCollider(string name, Vector3 position, Vector3 scale, Vector3? rotation = null)
+        static GameObject CreateCollider(string name, Vector3 position, Vector3 scale, Vector3? rotation = null, bool shadows = false)
         {
             Debug.Log("EditorColliders.CreateCollider", "name = " + name + ", position = " + position + ", scale = " + scale + ", rotation = " + (rotation ?? Vector3.zero));
 
             GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            cube.GetComponent<Renderer>().enabled = false;
-            cube.AddOrGetComponent<MeshCollider>();
-            cube.AddOrGetComponent<Remover>();
             cube.name = name;
+
+            Renderer renderer = cube.GetComponent<Renderer>();
+            if (shadows)
+            {
+                cube.name += "_Shadows";
+                renderer.material.color = Color.magenta;
+                renderer.shadowCastingMode = ShadowCastingMode.ShadowsOnly;
+            }
+            else
+            {
+                renderer.enabled = false;
+                renderer.shadowCastingMode = ShadowCastingMode.Off;
+                cube.AddOrGetComponent<MeshCollider>();
+            }
+
+            cube.AddOrGetComponent<Remover>();
             cube.transform.position = position;
             cube.transform.localScale = scale;
             cube.transform.eulerAngles = rotation ?? Vector3.zero;
@@ -179,15 +209,17 @@ namespace SigmaEditorViewPlugin
             return cube;
         }
 
+        static int debug = 0;
+
         static void DebugColliders()
         {
             Debug.Log("EditorColliders.DebugColliders");
 
-            string path = "GameData/Sigma/EditorView/Debug/";
+            string path = "GameData/Sigma/EditorView/Debug/Colliders/";
 
-            foreach (string name in walls.Keys)
+            foreach (string name in innerWalls.Keys)
             {
-                if (!System.IO.File.Exists(path + name + ".txt"))
+                if (debug == 0 || !System.IO.File.Exists(path + name + ".txt"))
                 {
                     if (!System.IO.Directory.Exists(path))
                         System.IO.Directory.CreateDirectory(path);
@@ -197,8 +229,8 @@ namespace SigmaEditorViewPlugin
                         path + name + ".txt",
                         new string[]
                         {
-                            walls[name][0].x + ", " + walls[name][0].y + ", " + walls[name][0].z,
-                            walls[name][1].x + ", " + walls[name][1].y + ", " + walls[name][1].z,
+                            innerWalls[name][0].x + ", " + innerWalls[name][0].y + ", " + innerWalls[name][0].z,
+                            innerWalls[name][1].x + ", " + innerWalls[name][1].y + ", " + innerWalls[name][1].z,
                             doors[name][0].x + ", " + doors[name][0].y + ", " + doors[name][0].z,
                             doors[name][1].x + ", " + doors[name][1].y + ", " + doors[name][1].z,
                             corners.ContainsKey(name) ? corners[name][0].x + ", " + corners[name][0].y + ", " + corners[name][0].z : "",
@@ -209,8 +241,8 @@ namespace SigmaEditorViewPlugin
                 }
 
                 string[] values = System.IO.File.ReadAllLines(path + name + ".txt");
-                walls[name][0] = ConfigNode.ParseVector3(values[0]);
-                walls[name][1] = ConfigNode.ParseVector3(values[1]);
+                innerWalls[name][0] = ConfigNode.ParseVector3(values[0]);
+                innerWalls[name][1] = ConfigNode.ParseVector3(values[1]);
                 doors[name][0] = ConfigNode.ParseVector3(values[2]);
                 doors[name][1] = ConfigNode.ParseVector3(values[3]);
                 if (corners.ContainsKey(name))
@@ -219,6 +251,36 @@ namespace SigmaEditorViewPlugin
                     corners[name][1] = ConfigNode.ParseVector3(values[5]);
                     corners[name][2] = ConfigNode.ParseVector3(values[6]);
                 }
+            }
+        }
+
+        static void DebugShadows()
+        {
+            Debug.Log("EditorColliders.DebugShadows");
+
+            string path = "GameData/Sigma/EditorView/Debug/Shadows/";
+
+            foreach (string name in outerWalls.Keys)
+            {
+                if (debug++ == 0 || !System.IO.File.Exists(path + name + ".txt"))
+                {
+                    if (!System.IO.Directory.Exists(path))
+                        System.IO.Directory.CreateDirectory(path);
+
+                    System.IO.File.WriteAllLines
+                    (
+                        path + name + ".txt",
+                        new string[]
+                        {
+                            outerWalls[name][0].x + ", " + outerWalls[name][0].y + ", " + outerWalls[name][0].z,
+                            outerWalls[name][1].x + ", " + outerWalls[name][1].y + ", " + outerWalls[name][1].z
+                        }
+                    );
+                }
+
+                string[] values = System.IO.File.ReadAllLines(path + name + ".txt");
+                outerWalls[name][0] = ConfigNode.ParseVector3(values[0]);
+                outerWalls[name][1] = ConfigNode.ParseVector3(values[1]);
             }
         }
 
@@ -243,7 +305,19 @@ namespace SigmaEditorViewPlugin
                 if (Debug.debug && Input.GetKeyDown(KeyCode.C))
                 {
                     // Toggle Renderer by pressing 'C'
-                    GetComponent<Renderer>().enabled ^= true;
+                    Renderer renderer = GetComponent<Renderer>();
+                    switch (renderer.shadowCastingMode)
+                    {
+                        case ShadowCastingMode.Off:
+                            renderer.enabled ^= true;
+                            break;
+                        case ShadowCastingMode.On:
+                            renderer.shadowCastingMode = ShadowCastingMode.ShadowsOnly;
+                            break;
+                        case ShadowCastingMode.ShadowsOnly:
+                            renderer.shadowCastingMode = ShadowCastingMode.On;
+                            break;
+                    }
                 }
             }
         }

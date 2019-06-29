@@ -33,9 +33,13 @@
   <ItemGroup>
     <Compile Include="EditorView.cs" />
     <Compile Include="SkyBox\FlareCamera.cs" />
+    <Compile Include="SkyBox\FlareRemover.cs" />
     <Compile Include="Terrain\AmbientSettings.cs" />
     <Compile Include="Terrain\EditorBuildings.cs" />
+    <Compile Include="Terrain\EditorLight.cs" />
+    <Compile Include="Terrain\EditorShadows.cs" />
     <Compile Include="Terrain\EditorTerrain.cs" />
+    <Compile Include="Terrain\LightTracker.cs" />
     <Compile Include="Utility\DebugLogger.cs" />
     <Compile Include="SkyBox\EditorColliders.cs" />
     <Compile Include="SkyBox\EditorFlares.cs" />
@@ -56,6 +60,10 @@
     <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\[References]\KerbalSpaceProgram\UnityEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UI, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\[References]\KerbalSpaceProgram\UnityEngine.UI.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup />

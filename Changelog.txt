@@ -1,3 +1,9 @@
+**v0.3.0**
+
+- Updated to KSP 1.7.1
+- Added a toggle for the lights in the editor scene
+
+
 **v0.2.0**
 
 - Added buildings near the KSC
