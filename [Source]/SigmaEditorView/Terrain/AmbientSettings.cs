@@ -31,9 +31,10 @@ namespace SigmaEditorViewPlugin
             }
 
             // Fix the fog
-            RenderSettings.fog = fog;
             RenderSettings.fogColor = Color.black;
             Debug.Log("AmbientSettings.Apply", "RenderSettings.fogColor = " + RenderSettings.fogColor);
+            RenderSettings.fog = fog;
+            Debug.Log("AmbientSettings.Apply", "RenderSettings.fog = " + RenderSettings.fog);
         }
     }
 }
