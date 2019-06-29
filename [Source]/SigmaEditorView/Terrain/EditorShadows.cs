@@ -35,6 +35,8 @@ namespace SigmaEditorViewPlugin
             {
                 shadowsObject.transform.rotation = EditorView.Rotation * lightDirection;
                 shadowsObject.AddOrGetComponent<LightTracker>();
+
+                //shadowsObject.GetComponent<Light>().cullingMask = 1 << 0 | 1 << 15;
             }
 
             GameObject shadowPlane = GameObject.Find("ShadowPlane");
