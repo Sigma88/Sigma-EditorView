@@ -5,17 +5,6 @@ namespace SigmaEditorViewPlugin
 {
     internal static class AmbientSettings
     {
-        static bool fog = false;
-
-        internal static void Update()
-        {
-            Debug.Log("AmbientSettings.Update", "RenderSettings.sun = " + RenderSettings.sun);
-
-            fog = RenderSettings.sun.name == "Scaledspace SunLight";
-
-            Debug.Log("AmbientSettings.Update", "fog = " + fog);
-        }
-
         internal static void Apply(EditorFacility editor)
         {
             Debug.Log("AmbientSettings.Apply", "editor = " + editor);
@@ -31,10 +20,7 @@ namespace SigmaEditorViewPlugin
             }
 
             // Fix the fog
-            RenderSettings.fogColor = Color.black;
-            Debug.Log("AmbientSettings.Apply", "RenderSettings.fogColor = " + RenderSettings.fogColor);
-            RenderSettings.fog = fog;
-            Debug.Log("AmbientSettings.Apply", "RenderSettings.fog = " + RenderSettings.fog);
+            RenderSettings.fog = false;
         }
     }
 }

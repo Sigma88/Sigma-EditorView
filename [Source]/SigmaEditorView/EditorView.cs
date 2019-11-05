@@ -46,7 +46,6 @@ namespace SigmaEditorViewPlugin
             EditorFlares.Update();
 
             // Terrain
-            AmbientSettings.Update();
             EditorBuildings.Update();
             EditorShadows.Update();
         }
