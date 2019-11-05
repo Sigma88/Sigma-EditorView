@@ -6,7 +6,7 @@ namespace SigmaEditorViewPlugin
     [KSPAddon(KSPAddon.Startup.Instantly, true)]
     internal class Version : MonoBehaviour
     {
-        public static readonly System.Version number = new System.Version("0.3.0");
+        public static readonly System.Version number = new System.Version("0.4.0");
 
         void Awake()
         {
