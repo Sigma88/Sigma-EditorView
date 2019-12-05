@@ -2,7 +2,7 @@
 
 *Improves the outside view as seen from the VAB and SPH*
 
-<img src="https://i.imgur.com/pD2mdKP.png" width=500 />
+<img src="https://i.imgur.com/5xwE04V.png" width=500 />
 
 ### Downloads
 - [GitHub](https://github.com/Sigma88/Sigma-EditorView/releases)
