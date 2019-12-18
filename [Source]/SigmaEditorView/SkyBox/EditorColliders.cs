@@ -28,11 +28,11 @@ namespace SigmaEditorViewPlugin
 
         static Dictionary<string, Vector3[]> doors = new Dictionary<string, Vector3[]>
         {
-            { "SPHlvl1", new Vector3[] { new Vector3(-0.55f, 4.3f, 36), new Vector3(19.9f, 8.15f, 0) } },
-            { "SPHlvl2", new Vector3[] { new Vector3(-0.45f, 10, 42), new Vector3(42.75f, 19.36f, 0) } },
+            { "SPHlvl1", new Vector3[] { new Vector3(-0.6f, 4.2f, 35.5f), new Vector3(20, 8.4f, 0) } },
+            { "SPHlvl2", new Vector3[] { new Vector3(-0.45f, 9.85f, 42.5f), new Vector3(42.75f, 19.4f, 0) } },
             { "SPHmodern", new Vector3[] { new Vector3(0, 17, 61), new Vector3(79, 34, 0) } },
-            { "VABlvl2", new Vector3[] { new Vector3(30, 30.9f, 0.375f), new Vector3(0, 62, 27) } },
-            { "VABlvl3", new Vector3[] { new Vector3(37.5f, 29.75f, 0), new Vector3(0, 59.5f, 39.9f) } },
+            { "VABlvl2", new Vector3[] { new Vector3(29, 30.9f, 0.5f), new Vector3(0, 62, 28) } },
+            { "VABlvl3", new Vector3[] { new Vector3(37.5f, 29.75f, 0), new Vector3(0, 59.5f, 40.5f) } },
             { "VABmodern", new Vector3[] { new Vector3(33.75f, 25.25f, 0), new Vector3(0, 50.5f, 43.5f) } }
         };
 
@@ -163,6 +163,37 @@ namespace SigmaEditorViewPlugin
                     wall.transform.localScale = wall.transform.localScale.Z((wall.transform.localScale.z - position.z * 2 - scale.z) * 0.5f);
 
                     Debug.Log("EditorColliders.Door", "name = " + wall.name + ", position = " + wall.transform.position + ", scale = " + wall.transform.localScale + ", rotation = " + wall.transform.eulerAngles);
+                }
+
+                // DOORS
+                if (!shadows)
+                {
+                    EditorDoor.shadeL = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                    EditorDoor.shadeL.GetComponent<Renderer>().shadowCastingMode = ShadowCastingMode.ShadowsOnly;
+                    EditorDoor.shadeR = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                    EditorDoor.shadeR.GetComponent<Renderer>().shadowCastingMode = ShadowCastingMode.ShadowsOnly;
+
+                    EditorDoor.doorL = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                    EditorDoor.doorR = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                    MeshRenderer mrL = EditorDoor.doorL.AddOrGetComponent<MeshRenderer>();
+                    MeshRenderer mrR = EditorDoor.doorR.AddOrGetComponent<MeshRenderer>();
+                    mrL.material.mainTexture = mrR.material.mainTexture = Settings.doorTex;
+                    mrL.material.mainTextureScale = mrR.material.mainTextureScale = Settings.doorTexScale;
+                    mrL.material.SetTexture("_BumpMap", Settings.doorBump);
+                    mrR.material.SetTexture("_BumpMap", Settings.doorBump);
+                    mrL.material.SetTextureScale("_BumpMap", Settings.doorTexScale);
+                    mrR.material.SetTextureScale("_BumpMap", Settings.doorTexScale);
+                    mrL.material.SetFloat("_Glossiness", Settings.doorGloss);
+                    mrR.material.SetFloat("_Glossiness", Settings.doorGloss);
+
+                    EditorDoor.doorL.layer = EditorDoor.doorR.layer = 15;
+                    EditorDoor.doorL.transform.localScale = EditorDoor.doorR.transform.localScale = scale.x == 0 ? scale.X(0.1f).Z(scale.z / 2f) : scale.Z(0.1f).X(scale.x / 2f);
+                    EditorDoor.shadeL.transform.localScale = EditorDoor.shadeR.transform.localScale = scale.x == 0 ? EditorDoor.doorL.transform.localScale.X(0) : EditorDoor.doorL.transform.localScale.Z(0);
+                    EditorDoor.doorL.transform.position = EditorDoor.shadeL.transform.position = scale.x == 0 ? position.dZ(-EditorDoor.doorL.transform.localScale.z / 2f) : position.dX(-EditorDoor.doorL.transform.localScale.x / 2f);
+                    EditorDoor.doorR.transform.position = EditorDoor.shadeR.transform.position = scale.x == 0 ? position.dZ(EditorDoor.doorL.transform.localScale.z / 2f) : position.dX(EditorDoor.doorL.transform.localScale.x / 2f);
+
+                    EditorDoor.doorL.AddOrGetComponent<EditorDoor.Mover>().open = EditorDoor.shadeL.AddOrGetComponent<EditorDoor.Mover>().open = scale.x == 0 ? EditorDoor.doorL.transform.position.dZ(-EditorDoor.doorL.transform.localScale.z) : EditorDoor.doorL.transform.position.dX(-EditorDoor.doorL.transform.localScale.x);
+                    EditorDoor.doorR.AddOrGetComponent<EditorDoor.Mover>().open = EditorDoor.shadeR.AddOrGetComponent<EditorDoor.Mover>().open = scale.x == 0 ? EditorDoor.doorR.transform.position.dZ(EditorDoor.doorL.transform.localScale.z) : EditorDoor.doorR.transform.position.dX(EditorDoor.doorL.transform.localScale.x);
                 }
             }
         }

@@ -63,6 +63,7 @@ namespace SigmaEditorViewPlugin
             AmbientSettings.Apply(editor);
             EditorTerrain.Apply(editor);
             EditorLight.Apply(editor);
+            EditorDoor.Apply(editor);
             EditorShadows.Apply(editor);
             EditorBuildings.Apply(editor);
         }
