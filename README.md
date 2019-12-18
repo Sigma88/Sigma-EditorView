@@ -2,7 +2,7 @@
 
 *Improves the outside view as seen from the VAB and SPH*
 
-<img src="https://i.imgur.com/5xwE04V.png" width=500 />
+[<img src="https://i.imgur.com/5xwE04V.png" width=500 />](https://imgur.com/gallery/VtG8hiK "Album")
 
 
 ### Downloads
