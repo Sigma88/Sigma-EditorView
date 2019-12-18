@@ -19,9 +19,11 @@
 ### Support
 If you enjoy my mods, please consider supporting me with a small donation.
 
-[![Donate Pounds][£]](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=65VBNHB39BTKG&item_name=Sigma-EditorView&currency_code=GBP)
-[![Donate Euros][€]](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=65VBNHB39BTKG&item_name=Sigma-EditorView&currency_code=EUR)
-[![Donate Dollars][$]](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=65VBNHB39BTKG&item_name=Sigma-EditorView&currency_code=USD)
+[![Donate Pounds](https://i.imgur.com/xBBQy19.png)][£][![Donate Euros](https://i.imgur.com/kKYb2lE.png)][€][![Donate Dollars](https://i.imgur.com/TT1Vymu.png)][$]
+
+[£]: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=65VBNHB39BTKG&item_name=Sigma-EditorView&currency_code=GBP "Donate Pounds"
+[€]: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=65VBNHB39BTKG&item_name=Sigma-EditorView&currency_code=EUR "Donate Euros"
+[$]: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=65VBNHB39BTKG&item_name=Sigma-EditorView&currency_code=USD "Donate Dollars"
 
 
 ### How To Report A Bug
@@ -41,9 +43,3 @@ To install the mod manually, follow these instructions:
 
 **2. Uninstall manually**
 - Delete the folder 'KSP\GameData\Sigma\EditorView'
-
-
-
-[£]: https://i.imgur.com/xBBQy19.png "Donate Pounds"
-[€]: https://i.imgur.com/kKYb2lE.png "Donate Euros"
-[$]: https://i.imgur.com/TT1Vymu.png "Donate Dollars"
