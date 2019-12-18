@@ -51,6 +51,7 @@
     <Compile Include="Utility\SettingsLoader.cs" />
     <Compile Include="Utility\ShaderLoader.cs" />
     <Compile Include="Triggers.cs" />
+    <Compile Include="Utility\UI_Toggle.cs" />
     <Compile Include="Utility\UserSettings.cs" />
     <Compile Include="Utility\Version.cs" />
   </ItemGroup>
