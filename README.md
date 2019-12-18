@@ -43,3 +43,7 @@ To install the mod manually, follow these instructions:
 
 **2. Uninstall manually**
 - Delete the folder 'KSP\GameData\Sigma\EditorView'
+
+
+### License
+All Rights Reserved
