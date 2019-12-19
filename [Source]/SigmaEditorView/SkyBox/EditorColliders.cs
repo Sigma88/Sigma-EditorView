@@ -168,12 +168,16 @@ namespace SigmaEditorViewPlugin
                 // DOORS
                 if (!shadows)
                 {
+                    if (EditorDoor.shadeL) Object.DestroyImmediate(EditorDoor.shadeL);
                     EditorDoor.shadeL = GameObject.CreatePrimitive(PrimitiveType.Cube);
                     EditorDoor.shadeL.GetComponent<Renderer>().shadowCastingMode = ShadowCastingMode.ShadowsOnly;
+                    if (EditorDoor.shadeR) Object.DestroyImmediate(EditorDoor.shadeR);
                     EditorDoor.shadeR = GameObject.CreatePrimitive(PrimitiveType.Cube);
                     EditorDoor.shadeR.GetComponent<Renderer>().shadowCastingMode = ShadowCastingMode.ShadowsOnly;
 
+                    if (EditorDoor.doorL) Object.DestroyImmediate(EditorDoor.doorL);
                     EditorDoor.doorL = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                    if (EditorDoor.doorR) Object.DestroyImmediate(EditorDoor.doorR);
                     EditorDoor.doorR = GameObject.CreatePrimitive(PrimitiveType.Cube);
                     MeshRenderer mrL = EditorDoor.doorL.AddOrGetComponent<MeshRenderer>();
                     MeshRenderer mrR = EditorDoor.doorR.AddOrGetComponent<MeshRenderer>();

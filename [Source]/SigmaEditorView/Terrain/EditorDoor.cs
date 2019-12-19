@@ -107,6 +107,8 @@ namespace SigmaEditorViewPlugin
             internal Vector3 close = Vector3.one;
             internal int direction = 1;  // -1 = open, 1 = close
             internal float position = 0; //  0 = open, 1 = close
+            AudioSource doorSound;
+            AudioClip doorStop;
 
             internal void Reverse()
             {
@@ -121,25 +123,42 @@ namespace SigmaEditorViewPlugin
                 newButton2.onClick.AddListener(Reverse);
                 close = transform.position;
                 transform.position = Settings.closeDoors ? close : open;
+
+                doorSound = gameObject.AddOrGetComponent<AudioSource>();
+                AudioClip clip = Resources.FindObjectsOfTypeAll<AudioClip>().FirstOrDefault(c => c.name == "Sigma/EditorView/Sounds/doormove6");
+                doorStop = Resources.FindObjectsOfTypeAll<AudioClip>().FirstOrDefault(c => c.name == "Sigma/EditorView/Sounds/doorstop4");
+
+                doorSound.clip = clip;
+                doorSound.loop = true;
             }
 
             void Update()
             {
                 if (direction > 0 && position < 1)
                 {
+                    if (!doorSound.isPlaying)
+                        doorSound.Play();
+
                     position += 0.2f * Time.deltaTime;
                     if (position > 1)
                     {
                         position = 1;
+                        doorSound.Stop();
+                        doorSound.PlayOneShot(doorStop);
                     }
                     transform.position = Vector3.Lerp(open, close, position);
                 }
                 else if (direction < 0 && position > 0)
                 {
+                    if (!doorSound.isPlaying)
+                        doorSound.Play();
+
                     position -= 0.2f * Time.deltaTime;
                     if (position < 0)
                     {
                         position = 0;
+                        doorSound.Stop();
+                        doorSound.PlayOneShot(doorStop);
                     }
                     transform.position = Vector3.Lerp(open, close, position);
                 }
