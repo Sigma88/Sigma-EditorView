@@ -125,11 +125,9 @@ namespace SigmaEditorViewPlugin
                 transform.position = Settings.closeDoors ? close : open;
 
                 doorSound = gameObject.AddOrGetComponent<AudioSource>();
-                AudioClip clip = Resources.FindObjectsOfTypeAll<AudioClip>().FirstOrDefault(c => c.name == "Sigma/EditorView/Sounds/doormove6");
-                doorStop = Resources.FindObjectsOfTypeAll<AudioClip>().FirstOrDefault(c => c.name == "Sigma/EditorView/Sounds/doorstop4");
-
-                doorSound.clip = clip;
+                doorSound.clip = Resources.FindObjectsOfTypeAll<AudioClip>().FirstOrDefault(c => c.name == "Sigma/EditorView/Sounds/loop1");
                 doorSound.loop = true;
+                doorStop = Resources.FindObjectsOfTypeAll<AudioClip>().FirstOrDefault(c => c.name == "Sigma/EditorView/Sounds/stop1");
             }
 
             void Update()
@@ -140,7 +138,7 @@ namespace SigmaEditorViewPlugin
                         doorSound.Play();
 
                     position += 0.2f * Time.deltaTime;
-                    if (position > 1)
+                    if (position >= 1)
                     {
                         position = 1;
                         doorSound.Stop();
@@ -154,7 +152,7 @@ namespace SigmaEditorViewPlugin
                         doorSound.Play();
 
                     position -= 0.2f * Time.deltaTime;
-                    if (position < 0)
+                    if (position <= 0)
                     {
                         position = 0;
                         doorSound.Stop();
