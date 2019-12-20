@@ -8,7 +8,7 @@ namespace SigmaEditorViewPlugin
     {
         internal static int size = 1024;
         internal static bool closeDoors = false;
-        internal static bool toggleDoors = true;
+        internal static bool toggleDoors = false; // change to 'true' when the feature is completely fixed
         internal static Texture doorTex;
         internal static Texture doorBump;
         internal static Vector2 doorTexScale = new Vector2(2, 3);
@@ -36,7 +36,7 @@ namespace SigmaEditorViewPlugin
 
                 if (!bool.TryParse(settings.GetValue("toggleDoor"), out Settings.toggleDoors))
                 {
-                    Settings.toggleDoors = true;
+                    Settings.toggleDoors = false; // change to 'true' when the feature is completely fixed
                 }
 
                 Settings.doorTex = Resources.FindObjectsOfTypeAll<Texture>().FirstOrDefault(t => t.name == settings.GetValue("doorTex")) ?? Resources.FindObjectsOfTypeAll<Texture>().FirstOrDefault(t => t.name == "NissenHut_d");
