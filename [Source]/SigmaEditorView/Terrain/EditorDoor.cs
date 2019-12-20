@@ -126,9 +126,9 @@ namespace SigmaEditorViewPlugin
                 transform.position = Settings.closeDoors ? close : open;
 
                 doorSound = gameObject.AddOrGetComponent<AudioSource>();
-                doorSound.clip = Resources.FindObjectsOfTypeAll<AudioClip>().FirstOrDefault(c => c.name == "Sigma/EditorView/Sounds/loop1");
+                doorSound.clip = Resources.FindObjectsOfTypeAll<AudioClip>().FirstOrDefault(c => c.name == "Sigma/EditorView/Sounds/DoorMove");
                 doorSound.loop = true;
-                doorStop = Resources.FindObjectsOfTypeAll<AudioClip>().FirstOrDefault(c => c.name == "Sigma/EditorView/Sounds/stop1");
+                doorStop = Resources.FindObjectsOfTypeAll<AudioClip>().FirstOrDefault(c => c.name == "Sigma/EditorView/Sounds/DoorStop");
             }
 
             void Update()
