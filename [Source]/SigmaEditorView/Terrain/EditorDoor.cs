@@ -113,6 +113,7 @@ namespace SigmaEditorViewPlugin
             internal void Reverse()
             {
                 direction *= -1;
+                doorSound.Stop();
             }
 
             void Start()
