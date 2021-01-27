@@ -52,7 +52,7 @@ namespace SigmaEditorViewPlugin
                 {
                     GameObject myLine = new GameObject("lineRenderer");
                     line = myLine.AddOrGetComponent<LineRenderer>();
-                    line.material = new Material(Shader.Find("Particles/Alpha Blended Premultiply"));
+                    line.material = new Material(Shader.Find("Legacy Shaders/Particles/Alpha Blended Premultiply"));
                     line.startColor = line.endColor = Color.black;
                     line.startWidth = 0.02f;
                     line.endWidth = 25f;
