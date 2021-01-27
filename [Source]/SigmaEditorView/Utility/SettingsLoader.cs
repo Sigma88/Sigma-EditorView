@@ -32,9 +32,9 @@ namespace SigmaEditorViewPlugin
                     Settings.size = 1024;
                 }
 
-                bool.TryParse(settings.GetValue("closeDoor"), out Settings.closeDoors);
+                bool.TryParse(settings.GetValue("closeDoors"), out Settings.closeDoors);
 
-                if (!bool.TryParse(settings.GetValue("toggleDoor"), out Settings.toggleDoors))
+                if (!bool.TryParse(settings.GetValue("toggleDoors"), out Settings.toggleDoors))
                 {
                     Settings.toggleDoors = false; // change to 'true' when the feature is completely fixed
                 }

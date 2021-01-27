@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using KSP.UI.TooltipTypes;
@@ -20,6 +21,8 @@ namespace SigmaEditorViewPlugin
         static Sprite spriteON;
         static Sprite spriteOFF;
 
+        static Dictionary<EditorFacility, bool> doorState = null;
+
         internal static void Apply(EditorFacility editor)
         {
             Debug.Log("EditorDoor.Apply", "editor = " + editor);
@@ -27,6 +30,11 @@ namespace SigmaEditorViewPlugin
             // Renderer
             Debug.Log("EditorDoor.Apply", "doorL = " + doorL + ", shadeL = " + shadeL);
             Debug.Log("EditorDoor.Apply", "doorR = " + doorR + ", shadeR = " + shadeR);
+
+            if (doorState == null)
+            {
+                doorState = new Dictionary<EditorFacility, bool>() { { EditorFacility.SPH, !Settings.closeDoors }, { EditorFacility.VAB, !Settings.closeDoors } };
+            }
 
             if (Settings.toggleDoors)
             {
@@ -81,8 +89,8 @@ namespace SigmaEditorViewPlugin
                 newButton1.onClick.AddListener(OnButtonClick);
                 newButton2.onClick.AddListener(OnButtonClick);
 
-                newButton1.gameObject.SetActive(!Settings.closeDoors);
-                newButton2.gameObject.SetActive(Settings.closeDoors);
+                newButton1.gameObject.SetActive(doorState[editor]);
+                newButton2.gameObject.SetActive(!doorState[editor]);
             }
             else
             {
