@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -10,6 +12,7 @@ namespace SigmaEditorViewPlugin
         static RenderTexture skybox;
         static RenderTexture scaled;
         static RenderTexture ground;
+        static bool scatterer = AssemblyLoader.loadedAssemblies.FirstOrDefault(a => a.name == "scatterer") != null;
 
         internal static void Update()
         {
@@ -30,22 +33,16 @@ namespace SigmaEditorViewPlugin
 
             // ScaledSpace and Atmosphere
             camera.backgroundColor = Color.clear;
-            GameObject Atmosphere = FlightGlobals.GetHomeBody()?.scaledBody?.GetChild("Atmosphere");    // Scatterer compatibility
-            bool? atmoBackUp = Atmosphere?.activeSelf;                                                  // Scatterer compatibility
-            if (atmoBackUp == false) Atmosphere.SetActive(true);                                        // Scatterer compatibility
-
             scaled = scaled ?? new RenderTexture(Settings.size, Settings.size, 0) { name = "EditorSky.scaled", dimension = TextureDimension.Cube }; //*/ new Cubemap(Settings.size, TextureFormat.RGBA32, false);
             camera.cullingMask = 1 << 9 | 1 << 10;
             camera.RenderToCubemap(scaled);
-
-            if (atmoBackUp == false) Atmosphere.SetActive(false);                                       // Scatterer compatibility
 
             // Ground
             camera.backgroundColor = Color.black;
             camera.nearClipPlane = 2000;
             camera.farClipPlane = 200000;
             camera.transform.position = SpaceCenter.Instance.SpaceCenterTransform.position - SpaceCenter.Instance.SpaceCenterTransform.up.normalized * 22;
-            ground = ground ?? new RenderTexture(Settings.size, Settings.size, 0) { name = "EditorSky.scaled", dimension = TextureDimension.Cube };
+            ground = ground ?? new RenderTexture(Settings.size, Settings.size, 0) { name = "EditorSky.ground", dimension = TextureDimension.Cube };
             camera.cullingMask = 1 << 15;
             camera.RenderToCubemap(ground);
 
@@ -63,6 +60,11 @@ namespace SigmaEditorViewPlugin
             RenderSettings.skybox.SetTexture("_SkyBox", skybox);
             RenderSettings.skybox.SetTexture("_Scaled", scaled);
             RenderSettings.skybox.SetTexture("_Ground", ground);
+
+            if (scatterer)
+            {
+                RenderSettings.skybox.SetFloat("_Scatterer", 1);
+            }
 
             RenderSettings.skybox.SetMatrix("_Rotation", EditorView.GetMatrix(editor));
         }
