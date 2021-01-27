@@ -7,11 +7,70 @@ using UnityEngine.Rendering;
 
 namespace SigmaEditorViewPlugin
 {
+    class AtmosphereAndSkyBoxRenderer : MonoBehaviour
+    {
+        Camera skyBoxCamera;
+        GameObject skyBoxCameraGO;
+
+        Camera scaledCamera;
+        GameObject scaledCameraGO;
+
+        Camera groundCamera;
+
+        public AtmosphereAndSkyBoxRenderer()
+        {
+        }
+
+        public void Awake()
+        {
+            // Create a camera that will render skyBox, and another scaledSpace+atmo
+            skyBoxCameraGO = new GameObject();
+            skyBoxCamera = skyBoxCameraGO.AddComponent<Camera>();
+            skyBoxCamera.enabled = false;
+
+            scaledCameraGO = new GameObject();
+            scaledCamera = scaledCameraGO.AddComponent<Camera>();
+            scaledCamera.enabled = false;
+
+            groundCamera = GetComponent<Camera>();
+        }
+
+        public void OnPreCull()
+        {
+            skyBoxCamera.CopyFrom(groundCamera);
+            skyBoxCamera.enabled = false;
+            skyBoxCamera.cullingMask = 1 << 18;
+            skyBoxCamera.clearFlags = CameraClearFlags.SolidColor;
+            skyBoxCamera.backgroundColor = Color.clear;
+
+            skyBoxCamera.targetTexture = groundCamera.targetTexture;
+            skyBoxCamera.Render();
+
+            scaledCamera.CopyFrom(groundCamera);
+            scaledCamera.enabled = false;
+            scaledCamera.cullingMask = 1 << 9 | 1 << 10;
+            scaledCamera.clearFlags = CameraClearFlags.Depth;
+
+            scaledCamera.targetTexture = groundCamera.targetTexture;
+            scaledCamera.Render();
+        }
+
+        public void OnDestroy()
+        {
+            skyBoxCamera.enabled = false;
+            Component.Destroy(skyBoxCamera);
+            UnityEngine.Object.Destroy(skyBoxCameraGO);
+
+            scaledCamera.enabled = false;
+            Component.Destroy(scaledCamera);
+            UnityEngine.Object.Destroy(scaledCameraGO);
+        }
+
+    }
+
     static class EditorSky
     {
-        static RenderTexture skybox;
-        static RenderTexture scaled;
-        static RenderTexture ground;
+        static RenderTexture combined;
         static bool scatterer = AssemblyLoader.loadedAssemblies.FirstOrDefault(a => a.name == "scatterer") != null;
 
         internal static void Update()
@@ -21,30 +80,23 @@ namespace SigmaEditorViewPlugin
             // Create GameObject and Camera
             GameObject marker = new GameObject("SigmaEditorView Camera");
             Camera camera = marker.AddOrGetComponent<Camera>();
+            camera.enabled = false;
 
             // Setup Camera
             camera.farClipPlane = maxdistance;
-            camera.backgroundColor = Color.clear;
-
-            // SkyBox
-            skybox = skybox ?? new RenderTexture(Settings.size, Settings.size, 0) { name = "EditorSky.skybox", dimension = TextureDimension.Cube };
-            camera.cullingMask = 1 << 18;
-            camera.RenderToCubemap(skybox);
-
-            // ScaledSpace and Atmosphere
-            camera.backgroundColor = Color.clear;
-            scaled = scaled ?? new RenderTexture(Settings.size, Settings.size, 0) { name = "EditorSky.scaled", dimension = TextureDimension.Cube }; //*/ new Cubemap(Settings.size, TextureFormat.RGBA32, false);
-            camera.cullingMask = 1 << 9 | 1 << 10;
-            camera.RenderToCubemap(scaled);
 
             // Ground
-            camera.backgroundColor = Color.black;
             camera.nearClipPlane = 2000;
             camera.farClipPlane = 200000;
+            combined = combined ?? new RenderTexture(Settings.size, Settings.size, 0) { name = "EditorSky.ground", dimension = TextureDimension.Cube };
+            if (!combined.IsCreated()) combined.Create();
             camera.transform.position = SpaceCenter.Instance.SpaceCenterTransform.position - SpaceCenter.Instance.SpaceCenterTransform.up.normalized * 22;
-            ground = ground ?? new RenderTexture(Settings.size, Settings.size, 0) { name = "EditorSky.ground", dimension = TextureDimension.Cube };
             camera.cullingMask = 1 << 15;
-            camera.RenderToCubemap(ground);
+            camera.clearFlags = CameraClearFlags.Depth;
+
+            camera.gameObject.AddComponent<AtmosphereAndSkyBoxRenderer>();
+
+            camera.RenderToCubemap(combined);
 
             // CleanUp
             Object.DestroyImmediate(camera);
