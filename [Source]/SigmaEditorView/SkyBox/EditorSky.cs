@@ -37,22 +37,38 @@ namespace SigmaEditorViewPlugin
 
         public void OnPreCull()
         {
+            UnityEngine.Debug.Log("SigmaLog: BEFORE COPY skyBoxCamera.transform.eulerAngles = " + (Vector3d)skyBoxCamera.transform.eulerAngles + ", skyBoxCamera.nearClipPlane" + skyBoxCamera.nearClipPlane + ", skyBoxCamera.farClipPlane" + skyBoxCamera.farClipPlane);
             skyBoxCamera.CopyFrom(groundCamera);
+           UnityEngine.Debug.Log("SigmaLog: AFTER COPY skyBoxCamera.transform.eulerAngles = " + (Vector3d)skyBoxCamera.transform.eulerAngles + ", skyBoxCamera.nearClipPlane" + skyBoxCamera.nearClipPlane + ", skyBoxCamera.farClipPlane" + skyBoxCamera.farClipPlane);
             skyBoxCamera.enabled = false;
             skyBoxCamera.cullingMask = 1 << 18;
             skyBoxCamera.clearFlags = CameraClearFlags.SolidColor;
             skyBoxCamera.backgroundColor = Color.clear;
 
             skyBoxCamera.targetTexture = groundCamera.targetTexture;
+            skyBoxCamera.nearClipPlane = EditorSky.backupnear;
+            skyBoxCamera.farClipPlane = EditorSky.backupfar;
+            skyBoxCamera.transform.position = EditorSky.backupcamera;
             skyBoxCamera.Render();
+            UnityEngine.Debug.Log("SigmaLog: AFTER RENDER skyBoxCamera.transform.eulerAngles = " + (Vector3d)skyBoxCamera.transform.eulerAngles + ", skyBoxCamera.nearClipPlane" + skyBoxCamera.nearClipPlane + ", skyBoxCamera.farClipPlane" + skyBoxCamera.farClipPlane);
 
-            scaledCamera.CopyFrom(groundCamera);
-            scaledCamera.enabled = false;
+
+            UnityEngine.Debug.Log("SigmaLog: BEFORE COPY scaledCamera.transform.eulerAngles = " + (Vector3d)scaledCamera.transform.eulerAngles + ", scaledCamera.nearClipPlane" + scaledCamera.nearClipPlane + ", scaledCamera.farClipPlane" + scaledCamera.farClipPlane);
+
+               scaledCamera.CopyFrom(groundCamera);  
+            UnityEngine.Debug.Log("SigmaLog: AFTER COPY scaledCamera.transform.eulerAngles = " + (Vector3d)scaledCamera.transform.eulerAngles + ", scaledCamera.nearClipPlane" + scaledCamera.nearClipPlane + ", scaledCamera.farClipPlane" + scaledCamera.farClipPlane);
+
+              scaledCamera.enabled = false;
             scaledCamera.cullingMask = 1 << 9 | 1 << 10;
             scaledCamera.clearFlags = CameraClearFlags.Depth;
 
             scaledCamera.targetTexture = groundCamera.targetTexture;
+            scaledCamera.nearClipPlane = EditorSky.backupnear;
+            scaledCamera.farClipPlane = EditorSky.backupfar;
+            scaledCamera.transform.position = EditorSky.backupcamera;
             scaledCamera.Render();
+            UnityEngine.Debug.Log("SigmaLog: AFTER RENDER scaledCamera.transform.eulerAngles = " + (Vector3d)scaledCamera.transform.eulerAngles + ", scaledCamera.nearClipPlane" + scaledCamera.nearClipPlane + ", scaledCamera.farClipPlane" + scaledCamera.farClipPlane);
+
         }
 
         public void OnDestroy()
@@ -68,9 +84,12 @@ namespace SigmaEditorViewPlugin
 
     }
 
-    static class EditorSky
+  internal  static class EditorSky
     {
-        static RenderTexture combined;
+       static Cubemap combined;
+        internal static Vector3 backupcamera;
+        internal static float backupnear;
+        internal static float backupfar;
         static bool scatterer = AssemblyLoader.loadedAssemblies.FirstOrDefault(a => a.name == "scatterer") != null;
 
         internal static void Update()
@@ -81,26 +100,41 @@ namespace SigmaEditorViewPlugin
             GameObject marker = new GameObject("SigmaEditorView Camera");
             Camera camera = marker.AddOrGetComponent<Camera>();
             camera.enabled = false;
-
+            backupcamera = camera.transform.position;
             // Setup Camera
             camera.farClipPlane = maxdistance;
 
             // Ground
+            backupnear = camera.nearClipPlane;
+            backupfar = camera.farClipPlane;
+
             camera.nearClipPlane = 2000;
             camera.farClipPlane = 200000;
-            combined = combined ?? new RenderTexture(Settings.size, Settings.size, 0) { name = "EditorSky.ground", dimension = TextureDimension.Cube };
-            if (!combined.IsCreated()) combined.Create();
+            combined = combined ?? new Cubemap(Settings.size, TextureFormat.ARGB32, false);//new RenderTexture(Settings.size, Settings.size, 0) { name = "EditorSky.ground", dimension = TextureDimension.Cube };
+            //if (!combined.IsCreated()) combined.Create();
+
             camera.transform.position = SpaceCenter.Instance.SpaceCenterTransform.position - SpaceCenter.Instance.SpaceCenterTransform.up.normalized * 22;
             camera.cullingMask = 1 << 15;
             camera.clearFlags = CameraClearFlags.Depth;
 
             camera.gameObject.AddComponent<AtmosphereAndSkyBoxRenderer>();
-
             camera.RenderToCubemap(combined);
+            PrintCubemap(combined, "combined");
 
             // CleanUp
             Object.DestroyImmediate(camera);
             Object.DestroyImmediate(marker);
+        }
+
+        internal static void PrintCubemap(Cubemap cubemap, string name)
+        {
+            for (int i = 0; i < 6; i++)
+            {
+                Texture2D tex = new Texture2D(cubemap.width, cubemap.width);
+                tex.SetPixels(cubemap.GetPixels((CubemapFace)i));
+                Directory.CreateDirectory("GameData/PluginData/Cubemaps/");
+                File.WriteAllBytes("GameData/PluginData/Cubemaps/" + name + "_" + i + ".png", tex.EncodeToPNG());
+            }
         }
 
         internal static void Apply(EditorFacility editor)
@@ -109,9 +143,9 @@ namespace SigmaEditorViewPlugin
 
             RenderSettings.skybox.shader = ShaderLoader.shader;
 
-            RenderSettings.skybox.SetTexture("_SkyBox", skybox);
-            RenderSettings.skybox.SetTexture("_Scaled", scaled);
-            RenderSettings.skybox.SetTexture("_Ground", ground);
+            RenderSettings.skybox.SetTexture("_SkyBox", combined);
+            //    RenderSettings.skybox.SetTexture("_Scaled", scaled);
+            //   RenderSettings.skybox.SetTexture("_Ground", ground);
 
             if (scatterer)
             {
@@ -123,7 +157,7 @@ namespace SigmaEditorViewPlugin
 
         static float? _maxdistance;
 
-        static float maxdistance
+       internal static float maxdistance
         {
             get
             {
