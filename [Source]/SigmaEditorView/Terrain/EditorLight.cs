@@ -62,21 +62,22 @@ namespace SigmaEditorViewPlugin
 
             GameObject topBar = GameObject.Find("Top Bar");
             GameObject buttonCrew = topBar.GetChild("ButtonPanelCrew");
+            GameObject buttonCargo = topBar.GetChild("ButtonPanelCargo");
             GameObject buttonEditor = topBar.GetChild("ButtonPanelEditor");
 
             Button oldButton = buttonCrew.GetComponent<Button>();
 
             GameObject buttonLight1 = Object.Instantiate(buttonCrew);
             buttonLight1.transform.SetParent(topBar.transform);
-            buttonLight1.transform.position = buttonEditor.transform.position * 2 - buttonCrew.transform.position;
-            buttonLight1.transform.localScale = buttonCrew.transform.localScale;
-            buttonLight1.transform.rotation = buttonCrew.transform.rotation;
+            buttonLight1.transform.position = buttonEditor.transform.position * 2 - buttonCargo.transform.position;
+            buttonLight1.transform.localScale = buttonCargo.transform.localScale;
+            buttonLight1.transform.rotation = buttonCargo.transform.rotation;
 
             GameObject buttonLight2 = Object.Instantiate(buttonCrew);
             buttonLight2.transform.SetParent(topBar.transform);
-            buttonLight2.transform.position = buttonEditor.transform.position * 2 - buttonCrew.transform.position;
-            buttonLight2.transform.localScale = buttonCrew.transform.localScale;
-            buttonLight2.transform.rotation = buttonCrew.transform.rotation;
+            buttonLight2.transform.position = buttonEditor.transform.position * 2 - buttonCargo.transform.position;
+            buttonLight2.transform.localScale = buttonCargo.transform.localScale;
+            buttonLight2.transform.rotation = buttonCargo.transform.rotation;
 
             Texture2D textureOFF = Resources.FindObjectsOfTypeAll<Texture2D>().FirstOrDefault(t => t.name == "Sigma/EditorView/Textures/LightsOFF");
             Texture2D textureON = Resources.FindObjectsOfTypeAll<Texture2D>().FirstOrDefault(t => t.name == "Sigma/EditorView/Textures/LightsON");
