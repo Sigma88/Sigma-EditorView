@@ -2,7 +2,6 @@
 using System.IO;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.Rendering;
 
 
 namespace SigmaEditorViewPlugin
@@ -17,13 +16,18 @@ namespace SigmaEditorViewPlugin
 
         Camera groundCamera;
 
+        float maxdistance;
+
         public AtmosphereAndSkyBoxRenderer()
         {
         }
 
         public void Awake()
         {
-            // Create a camera that will render skyBox, and another scaledSpace+atmo
+            maxdistance = EditorSky.maxdistance;
+
+            groundCamera = GetComponent<Camera>();
+
             skyBoxCameraGO = new GameObject();
             skyBoxCamera = skyBoxCameraGO.AddComponent<Camera>();
             skyBoxCamera.enabled = false;
@@ -31,65 +35,46 @@ namespace SigmaEditorViewPlugin
             scaledCameraGO = new GameObject();
             scaledCamera = scaledCameraGO.AddComponent<Camera>();
             scaledCamera.enabled = false;
-
-            groundCamera = GetComponent<Camera>();
         }
 
         public void OnPreCull()
         {
-            UnityEngine.Debug.Log("SigmaLog: BEFORE COPY skyBoxCamera.transform.eulerAngles = " + (Vector3d)skyBoxCamera.transform.eulerAngles + ", skyBoxCamera.nearClipPlane" + skyBoxCamera.nearClipPlane + ", skyBoxCamera.farClipPlane" + skyBoxCamera.farClipPlane);
             skyBoxCamera.CopyFrom(groundCamera);
-           UnityEngine.Debug.Log("SigmaLog: AFTER COPY skyBoxCamera.transform.eulerAngles = " + (Vector3d)skyBoxCamera.transform.eulerAngles + ", skyBoxCamera.nearClipPlane" + skyBoxCamera.nearClipPlane + ", skyBoxCamera.farClipPlane" + skyBoxCamera.farClipPlane);
             skyBoxCamera.enabled = false;
-            skyBoxCamera.cullingMask = 1 << 18;
-            skyBoxCamera.clearFlags = CameraClearFlags.SolidColor;
             skyBoxCamera.backgroundColor = Color.clear;
-
+            skyBoxCamera.clearFlags = CameraClearFlags.SolidColor;
             skyBoxCamera.targetTexture = groundCamera.targetTexture;
-            skyBoxCamera.nearClipPlane = EditorSky.backupnear;
-            skyBoxCamera.farClipPlane = EditorSky.backupfar;
-            skyBoxCamera.transform.position = EditorSky.backupcamera;
+            skyBoxCamera.cullingMask = 1 << 18;
+            skyBoxCamera.nearClipPlane = 0.3f;
+            skyBoxCamera.farClipPlane = maxdistance;
+            skyBoxCamera.transform.position = Vector3.zero;
             skyBoxCamera.Render();
-            UnityEngine.Debug.Log("SigmaLog: AFTER RENDER skyBoxCamera.transform.eulerAngles = " + (Vector3d)skyBoxCamera.transform.eulerAngles + ", skyBoxCamera.nearClipPlane" + skyBoxCamera.nearClipPlane + ", skyBoxCamera.farClipPlane" + skyBoxCamera.farClipPlane);
 
-
-            UnityEngine.Debug.Log("SigmaLog: BEFORE COPY scaledCamera.transform.eulerAngles = " + (Vector3d)scaledCamera.transform.eulerAngles + ", scaledCamera.nearClipPlane" + scaledCamera.nearClipPlane + ", scaledCamera.farClipPlane" + scaledCamera.farClipPlane);
-
-               scaledCamera.CopyFrom(groundCamera);  
-            UnityEngine.Debug.Log("SigmaLog: AFTER COPY scaledCamera.transform.eulerAngles = " + (Vector3d)scaledCamera.transform.eulerAngles + ", scaledCamera.nearClipPlane" + scaledCamera.nearClipPlane + ", scaledCamera.farClipPlane" + scaledCamera.farClipPlane);
-
-              scaledCamera.enabled = false;
-            scaledCamera.cullingMask = 1 << 9 | 1 << 10;
-            scaledCamera.clearFlags = CameraClearFlags.Depth;
-
+            scaledCamera.CopyFrom(groundCamera);
+            scaledCamera.enabled = false;
             scaledCamera.targetTexture = groundCamera.targetTexture;
-            scaledCamera.nearClipPlane = EditorSky.backupnear;
-            scaledCamera.farClipPlane = EditorSky.backupfar;
-            scaledCamera.transform.position = EditorSky.backupcamera;
+            scaledCamera.cullingMask = 1 << 9 | 1 << 10;
+            scaledCamera.nearClipPlane = 0.3f;
+            scaledCamera.farClipPlane = maxdistance;
+            scaledCamera.transform.position = Vector3.zero;
             scaledCamera.Render();
-            UnityEngine.Debug.Log("SigmaLog: AFTER RENDER scaledCamera.transform.eulerAngles = " + (Vector3d)scaledCamera.transform.eulerAngles + ", scaledCamera.nearClipPlane" + scaledCamera.nearClipPlane + ", scaledCamera.farClipPlane" + scaledCamera.farClipPlane);
-
         }
 
         public void OnDestroy()
         {
             skyBoxCamera.enabled = false;
-            Component.Destroy(skyBoxCamera);
-            UnityEngine.Object.Destroy(skyBoxCameraGO);
+            DestroyImmediate(skyBoxCamera);
+            DestroyImmediate(skyBoxCameraGO);
 
             scaledCamera.enabled = false;
-            Component.Destroy(scaledCamera);
-            UnityEngine.Object.Destroy(scaledCameraGO);
+            DestroyImmediate(scaledCamera);
+            DestroyImmediate(scaledCameraGO);
         }
-
     }
 
-  internal  static class EditorSky
+    internal static class EditorSky
     {
-       static Cubemap combined;
-        internal static Vector3 backupcamera;
-        internal static float backupnear;
-        internal static float backupfar;
+        static Cubemap combined;
         static bool scatterer = AssemblyLoader.loadedAssemblies.FirstOrDefault(a => a.name == "scatterer") != null;
 
         internal static void Update()
@@ -100,18 +85,9 @@ namespace SigmaEditorViewPlugin
             GameObject marker = new GameObject("SigmaEditorView Camera");
             Camera camera = marker.AddOrGetComponent<Camera>();
             camera.enabled = false;
-            backupcamera = camera.transform.position;
-            // Setup Camera
-            camera.farClipPlane = maxdistance;
-
-            // Ground
-            backupnear = camera.nearClipPlane;
-            backupfar = camera.farClipPlane;
-
             camera.nearClipPlane = 2000;
             camera.farClipPlane = 200000;
             combined = combined ?? new Cubemap(Settings.size, TextureFormat.ARGB32, false);//new RenderTexture(Settings.size, Settings.size, 0) { name = "EditorSky.ground", dimension = TextureDimension.Cube };
-            //if (!combined.IsCreated()) combined.Create();
 
             camera.transform.position = SpaceCenter.Instance.SpaceCenterTransform.position - SpaceCenter.Instance.SpaceCenterTransform.up.normalized * 22;
             camera.cullingMask = 1 << 15;
@@ -157,7 +133,7 @@ namespace SigmaEditorViewPlugin
 
         static float? _maxdistance;
 
-       internal static float maxdistance
+        internal static float maxdistance
         {
             get
             {
