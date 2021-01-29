@@ -6,7 +6,7 @@ using UnityEngine.Rendering;
 
 namespace SigmaEditorViewPlugin
 {
-    class BackgroundCamera : MonoBehaviour
+    internal class BackgroundCamera : MonoBehaviour
     {
         internal Camera backgroundCamera;
         Camera foregroundCamera;
@@ -20,6 +20,7 @@ namespace SigmaEditorViewPlugin
         {
             backgroundCamera.CopyFrom(foregroundCamera);
             backgroundCamera.enabled = false;
+            backgroundCamera.worldToCameraMatrix = Matrix4x4.TRS(Vector3.zero, foregroundCamera.worldToCameraMatrix.rotation, Vector3.one);
             backgroundCamera.backgroundColor = Color.black;
             backgroundCamera.clearFlags = CameraClearFlags.SolidColor;
             backgroundCamera.targetTexture = foregroundCamera.targetTexture;
@@ -38,10 +39,16 @@ namespace SigmaEditorViewPlugin
     {
         static RenderTexture cubemap;
         static bool scatterer = AssemblyLoader.loadedAssemblies.FirstOrDefault(a => a.name == "scatterer") != null;
+        static Vector3 vabOffset = new Vector3(110, 50, -50);
+        static Vector3 vabRealOffset;
 
         internal static void Update()
         {
             Debug.Log("EditorSky.Update");
+
+            Transform KSC = SpaceCenter.Instance.SpaceCenterTransform;
+            vabRealOffset = Vector3.Scale(vabOffset, KSC.localScale);
+            vabRealOffset = KSC.right.normalized * vabRealOffset.x + KSC.up.normalized * vabRealOffset.y + KSC.forward.normalized * vabRealOffset.z;
 
             GameObject foreground = new GameObject("SigmaEditorView Foreground Camera");
             Camera foregroundCamera = foreground.AddOrGetComponent<Camera>();
@@ -57,6 +64,7 @@ namespace SigmaEditorViewPlugin
             foregroundCamera.cullingMask = 1 << 15;
             foregroundCamera.clearFlags = CameraClearFlags.Depth;
             foregroundCamera.gameObject.AddOrGetComponent<BackgroundCamera>().backgroundCamera = backgroundCamera;
+            foregroundCamera.transform.position = KSC.position + vabRealOffset;
             foregroundCamera.RenderToCubemap(cubemap);
 
             // CleanUp
