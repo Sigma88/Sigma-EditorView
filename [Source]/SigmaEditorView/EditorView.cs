@@ -66,6 +66,9 @@ namespace SigmaEditorViewPlugin
             EditorDoor.Apply(editor);
             EditorShadows.Apply(editor);
             EditorBuildings.Apply(editor);
+
+            // Scatterer Compatibility
+            EditorCamera.Instance.cam.gameObject.AddOrGetComponent<EditorCameraTracker>();
         }
 
         internal static Matrix4x4 GetMatrix(EditorFacility editor)
@@ -81,6 +84,19 @@ namespace SigmaEditorViewPlugin
             Debug.Log("EditorView.OnDestroy");
             EditorFlares.DisableAll();
             EditorBuildings.DisableAll();
+        }
+
+        class EditorCameraTracker : MonoBehaviour
+        {
+            void OnPreRender()
+            {
+                EditorFlaresScatterer.OnPreRender(EditorDriver.editorFacility);
+            }
+
+            void OnPostRender()
+            {
+                EditorFlaresScatterer.OnPostRender();
+            }
         }
     }
 }
