@@ -67,9 +67,7 @@ namespace SigmaEditorViewPlugin
             foregroundCamera.RenderToCubemap(cubemap);
 
             // CleanUp
-            Object.DestroyImmediate(foregroundCamera);
             Object.DestroyImmediate(foreground);
-            Object.DestroyImmediate(backgroundCamera);
             Object.DestroyImmediate(background);
         }
 
