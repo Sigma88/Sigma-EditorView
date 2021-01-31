@@ -7,7 +7,7 @@ using KSP.UI.TooltipTypes;
 
 namespace SigmaEditorViewPlugin
 {
-    internal static class EditorDoor
+    internal static class EditorDoors
     {
         internal static GameObject shadeL;
         internal static GameObject doorL;
@@ -25,11 +25,11 @@ namespace SigmaEditorViewPlugin
 
         internal static void Apply(EditorFacility editor)
         {
-            Debug.Log("EditorDoor.Apply", "editor = " + editor);
+            Debug.Log("EditorDoors.Apply", "editor = " + editor);
 
             // Renderer
-            Debug.Log("EditorDoor.Apply", "doorL = " + doorL + ", shadeL = " + shadeL);
-            Debug.Log("EditorDoor.Apply", "doorR = " + doorR + ", shadeR = " + shadeR);
+            Debug.Log("EditorDoors.Apply", "doorL = " + doorL + ", shadeL = " + shadeL);
+            Debug.Log("EditorDoors.Apply", "doorR = " + doorR + ", shadeR = " + shadeR);
 
             if (doorState == null)
             {

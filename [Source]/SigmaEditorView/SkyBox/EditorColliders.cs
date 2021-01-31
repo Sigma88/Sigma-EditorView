@@ -168,19 +168,19 @@ namespace SigmaEditorViewPlugin
                 // DOORS
                 if (!shadows)
                 {
-                    if (EditorDoor.shadeL) Object.DestroyImmediate(EditorDoor.shadeL);
-                    EditorDoor.shadeL = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                    EditorDoor.shadeL.GetComponent<Renderer>().shadowCastingMode = ShadowCastingMode.ShadowsOnly;
-                    if (EditorDoor.shadeR) Object.DestroyImmediate(EditorDoor.shadeR);
-                    EditorDoor.shadeR = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                    EditorDoor.shadeR.GetComponent<Renderer>().shadowCastingMode = ShadowCastingMode.ShadowsOnly;
+                    if (EditorDoors.shadeL) Object.DestroyImmediate(EditorDoors.shadeL);
+                    EditorDoors.shadeL = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                    EditorDoors.shadeL.GetComponent<Renderer>().shadowCastingMode = ShadowCastingMode.ShadowsOnly;
+                    if (EditorDoors.shadeR) Object.DestroyImmediate(EditorDoors.shadeR);
+                    EditorDoors.shadeR = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                    EditorDoors.shadeR.GetComponent<Renderer>().shadowCastingMode = ShadowCastingMode.ShadowsOnly;
 
-                    if (EditorDoor.doorL) Object.DestroyImmediate(EditorDoor.doorL);
-                    EditorDoor.doorL = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                    if (EditorDoor.doorR) Object.DestroyImmediate(EditorDoor.doorR);
-                    EditorDoor.doorR = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                    MeshRenderer mrL = EditorDoor.doorL.AddOrGetComponent<MeshRenderer>();
-                    MeshRenderer mrR = EditorDoor.doorR.AddOrGetComponent<MeshRenderer>();
+                    if (EditorDoors.doorL) Object.DestroyImmediate(EditorDoors.doorL);
+                    EditorDoors.doorL = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                    if (EditorDoors.doorR) Object.DestroyImmediate(EditorDoors.doorR);
+                    EditorDoors.doorR = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                    MeshRenderer mrL = EditorDoors.doorL.AddOrGetComponent<MeshRenderer>();
+                    MeshRenderer mrR = EditorDoors.doorR.AddOrGetComponent<MeshRenderer>();
                     mrL.material.mainTexture = mrR.material.mainTexture = Settings.doorTex;
                     mrL.material.mainTextureScale = mrR.material.mainTextureScale = Settings.doorTexScale;
                     mrL.material.SetTexture("_BumpMap", Settings.doorBump);
@@ -190,14 +190,14 @@ namespace SigmaEditorViewPlugin
                     mrL.material.SetFloat("_Glossiness", Settings.doorGloss);
                     mrR.material.SetFloat("_Glossiness", Settings.doorGloss);
 
-                    EditorDoor.doorL.layer = EditorDoor.doorR.layer = 15;
-                    EditorDoor.doorL.transform.localScale = EditorDoor.doorR.transform.localScale = scale.x == 0 ? scale.X(0.1f).Z(scale.z / 2f) : scale.Z(0.1f).X(scale.x / 2f);
-                    EditorDoor.shadeL.transform.localScale = EditorDoor.shadeR.transform.localScale = scale.x == 0 ? EditorDoor.doorL.transform.localScale.X(0) : EditorDoor.doorL.transform.localScale.Z(0);
-                    EditorDoor.doorL.transform.position = EditorDoor.shadeL.transform.position = scale.x == 0 ? position.dZ(-EditorDoor.doorL.transform.localScale.z / 2f) : position.dX(-EditorDoor.doorL.transform.localScale.x / 2f);
-                    EditorDoor.doorR.transform.position = EditorDoor.shadeR.transform.position = scale.x == 0 ? position.dZ(EditorDoor.doorL.transform.localScale.z / 2f) : position.dX(EditorDoor.doorL.transform.localScale.x / 2f);
+                    EditorDoors.doorL.layer = EditorDoors.doorR.layer = 15;
+                    EditorDoors.doorL.transform.localScale = EditorDoors.doorR.transform.localScale = scale.x == 0 ? scale.X(0.1f).Z(scale.z / 2f) : scale.Z(0.1f).X(scale.x / 2f);
+                    EditorDoors.shadeL.transform.localScale = EditorDoors.shadeR.transform.localScale = scale.x == 0 ? EditorDoors.doorL.transform.localScale.X(0) : EditorDoors.doorL.transform.localScale.Z(0);
+                    EditorDoors.doorL.transform.position = EditorDoors.shadeL.transform.position = scale.x == 0 ? position.dZ(-EditorDoors.doorL.transform.localScale.z / 2f) : position.dX(-EditorDoors.doorL.transform.localScale.x / 2f);
+                    EditorDoors.doorR.transform.position = EditorDoors.shadeR.transform.position = scale.x == 0 ? position.dZ(EditorDoors.doorL.transform.localScale.z / 2f) : position.dX(EditorDoors.doorL.transform.localScale.x / 2f);
 
-                    EditorDoor.doorL.AddOrGetComponent<EditorDoor.Mover>().open = EditorDoor.shadeL.AddOrGetComponent<EditorDoor.Mover>().open = scale.x == 0 ? EditorDoor.doorL.transform.position.dZ(-EditorDoor.doorL.transform.localScale.z) : EditorDoor.doorL.transform.position.dX(-EditorDoor.doorL.transform.localScale.x);
-                    EditorDoor.doorR.AddOrGetComponent<EditorDoor.Mover>().open = EditorDoor.shadeR.AddOrGetComponent<EditorDoor.Mover>().open = scale.x == 0 ? EditorDoor.doorR.transform.position.dZ(EditorDoor.doorL.transform.localScale.z) : EditorDoor.doorR.transform.position.dX(EditorDoor.doorL.transform.localScale.x);
+                    EditorDoors.doorL.AddOrGetComponent<EditorDoors.Mover>().open = EditorDoors.shadeL.AddOrGetComponent<EditorDoors.Mover>().open = scale.x == 0 ? EditorDoors.doorL.transform.position.dZ(-EditorDoors.doorL.transform.localScale.z) : EditorDoors.doorL.transform.position.dX(-EditorDoors.doorL.transform.localScale.x);
+                    EditorDoors.doorR.AddOrGetComponent<EditorDoors.Mover>().open = EditorDoors.shadeR.AddOrGetComponent<EditorDoors.Mover>().open = scale.x == 0 ? EditorDoors.doorR.transform.position.dZ(EditorDoors.doorL.transform.localScale.z) : EditorDoors.doorR.transform.position.dX(EditorDoors.doorL.transform.localScale.x);
                 }
             }
         }
