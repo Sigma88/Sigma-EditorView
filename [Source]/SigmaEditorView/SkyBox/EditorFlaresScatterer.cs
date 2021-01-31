@@ -203,27 +203,4 @@ namespace SigmaEditorViewPlugin
             }
         }
     }
-
-
-    internal static class TextureUtility
-    {
-        internal static void EncodeToPNG(this RenderTexture RT, string path)
-        {
-            RenderTexture oldActive = RenderTexture.active;
-            RenderTexture.active = RT;
-
-            // Load new texture
-            Texture2D finalTexture = new Texture2D(RT.width, RT.height);
-            finalTexture.ReadPixels(new Rect(0, 0, finalTexture.width, finalTexture.height), 0, 0);
-
-            int counter = 0;
-
-            while (System.IO.File.Exists(path + counter + ".png"))
-            {
-                counter++;
-            }
-            System.IO.File.WriteAllBytes(path + counter + ".png", finalTexture.EncodeToPNG());
-            RenderTexture.active = oldActive;
-        }
-    }
 }
