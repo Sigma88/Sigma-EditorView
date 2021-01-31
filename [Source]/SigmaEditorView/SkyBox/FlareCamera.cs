@@ -69,7 +69,7 @@ namespace SigmaEditorViewPlugin
             }
             else if (scattererFlare)
             {
-                hidden = Physics.Raycast(EditorCamera.Instance.cam.ViewportPointToRay(scattererFlare.material.GetVector("sunViewPortPos")), Mathf.Infinity, layerMask);
+                hidden = Physics.Raycast(EditorCamera.Instance.cam.ViewportPointToRay(scattererFlare.material.GetVector(ScattererShader.sunViewPortPos)), Mathf.Infinity, layerMask);
             }
         }
 
@@ -136,7 +136,7 @@ namespace SigmaEditorViewPlugin
                 }
                 else if (scattererFlare)
                 {
-                    line.SetPosition(1, EditorCamera.Instance.cam.ViewportToWorldPoint(scattererFlare.material.GetVector("sunViewPortPos")).normalized * 5000);
+                    line.SetPosition(1, EditorCamera.Instance.cam.ViewportToWorldPoint(scattererFlare.material.GetVector(ScattererShader.sunViewPortPos)).normalized * 5000);
                 }
 
                 line.startColor = line.endColor = hidden ? Color.red : Color.green;

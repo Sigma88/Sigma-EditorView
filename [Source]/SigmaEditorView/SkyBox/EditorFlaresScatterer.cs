@@ -51,15 +51,15 @@ namespace SigmaEditorViewPlugin
                     Vector3 sunViewPortPos = EditorCamera.Instance.cam.WorldToViewportPoint(EditorView.Rotation * position);
 
                     // Set the correct sunViewPortPos
-                    material.SetVector("sunViewPortPos", sunViewPortPos);
+                    material.SetVector(ScattererShader.sunViewPortPos, sunViewPortPos);
 
                     // Only Display the flare if it is visible
                     if (sunViewPortPos.z > 0)
                     {
                         // Set Other Properties
-                        material.SetFloat(Shader.PropertyToID("renderSunFlare"), 1.0f);
-                        material.SetFloat(Shader.PropertyToID("renderOnCurrentCamera"), 1.0f);
-                        material.SetFloat(Shader.PropertyToID("useDbufferOnCamera"), 0.0f);
+                        material.SetFloat(ScattererShader.renderSunFlare, 1.0f);
+                        material.SetFloat(ScattererShader.renderOnCurrentCamera, 1.0f);
+                        material.SetFloat(ScattererShader.useDbufferOnCamera, 0.0f);
                     }
                 }
             }
@@ -85,9 +85,9 @@ namespace SigmaEditorViewPlugin
                 if (material)
                 {
                     // Set Other Properties
-                    material.SetFloat(Shader.PropertyToID("renderSunFlare"), 0.0f);
-                    material.SetFloat(Shader.PropertyToID("renderOnCurrentCamera"), 0.0f);
-                    material.SetFloat(Shader.PropertyToID("useDbufferOnCamera"), 0.0f);
+                    material.SetFloat(ScattererShader.renderSunFlare, 0.0f);
+                    material.SetFloat(ScattererShader.renderOnCurrentCamera, 0.0f);
+                    material.SetFloat(ScattererShader.useDbufferOnCamera, 0.0f);
                 }
             }
         }
@@ -201,6 +201,23 @@ namespace SigmaEditorViewPlugin
                 Debug.Log("EditorFlaresScatterer.GetSunFlareCB", "Failed to find CelestialBody for sunFlare: " + sunFlare);
                 return null;
             }
+        }
+    }
+
+    [KSPAddon(KSPAddon.Startup.MainMenu, true)]
+    internal class ScattererShader : MonoBehaviour
+    {
+        internal static int sunViewPortPos;
+        internal static int renderSunFlare;
+        internal static int renderOnCurrentCamera;
+        internal static int useDbufferOnCamera;
+
+        void Start()
+        {
+            sunViewPortPos = Shader.PropertyToID("sunViewPortPos");
+            renderSunFlare = Shader.PropertyToID("renderSunFlare");
+            renderOnCurrentCamera = Shader.PropertyToID("renderOnCurrentCamera");
+            useDbufferOnCamera = Shader.PropertyToID("useDbufferOnCamera");
         }
     }
 }
