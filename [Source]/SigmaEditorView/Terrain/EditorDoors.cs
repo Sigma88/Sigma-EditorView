@@ -122,7 +122,7 @@ namespace SigmaEditorViewPlugin
             internal void Reverse()
             {
                 direction *= -1;
-                doorSound.Stop();
+                Stop(false);
             }
 
             void Start()
@@ -134,41 +134,60 @@ namespace SigmaEditorViewPlugin
                 close = transform.position;
                 transform.position = Settings.closeDoors ? close : open;
 
-                doorSound = gameObject.AddOrGetComponent<AudioSource>();
-                doorSound.clip = Resources.FindObjectsOfTypeAll<AudioClip>().FirstOrDefault(c => c.name == "Sigma/EditorView/Sounds/DoorMove");
-                doorSound.loop = true;
-                doorStop = Resources.FindObjectsOfTypeAll<AudioClip>().FirstOrDefault(c => c.name == "Sigma/EditorView/Sounds/DoorStop");
+                if (Settings.doorsSound)
+                {
+                    doorSound = gameObject.AddOrGetComponent<AudioSource>();
+                    doorSound.clip = Resources.FindObjectsOfTypeAll<AudioClip>().FirstOrDefault(c => c.name == Settings.doorsMoveSound);
+                    doorSound.loop = true;
+                    doorStop = Resources.FindObjectsOfTypeAll<AudioClip>().FirstOrDefault(c => c.name == Settings.doorsStopSound);
+                }
             }
 
             void Update()
             {
                 if (direction > 0 && position < 1)
                 {
-                    if (!doorSound.isPlaying)
-                        doorSound.Play();
-
+                    Play();
                     position += 0.2f * Time.deltaTime;
                     if (position >= 1)
                     {
                         position = 1;
-                        doorSound.Stop();
-                        doorSound.PlayOneShot(doorStop);
+                        Stop();
                     }
                     transform.position = Vector3.Lerp(open, close, position);
                 }
                 else if (direction < 0 && position > 0)
                 {
-                    if (!doorSound.isPlaying)
-                        doorSound.Play();
-
+                    Play();
                     position -= 0.2f * Time.deltaTime;
                     if (position <= 0)
                     {
                         position = 0;
-                        doorSound.Stop();
-                        doorSound.PlayOneShot(doorStop);
+                        Stop();
                     }
                     transform.position = Vector3.Lerp(open, close, position);
+                }
+            }
+
+            void Play()
+            {
+                if (Settings.doorsSound)
+                {
+                    if (!doorSound.isPlaying)
+                        doorSound.Play();
+                }
+            }
+
+            void Stop(bool end = true)
+            {
+                if (Settings.doorsSound)
+                {
+                    doorSound.Stop();
+
+                    if (end)
+                    {
+                        doorSound.PlayOneShot(doorStop);
+                    }
                 }
             }
         }

@@ -16,6 +16,8 @@ namespace SigmaEditorViewPlugin
         internal static Texture doorBump;
         internal static Vector2 doorTexScale = new Vector2(2, 3);
         internal static float doorGloss = 0.4f;
+        internal static string doorsMoveSound;
+        internal static string doorsStopSound;
     }
 
     [KSPAddon(KSPAddon.Startup.MainMenu, true)]
@@ -69,6 +71,18 @@ namespace SigmaEditorViewPlugin
                 if (!float.TryParse(settings.GetValue("doorGloss"), out Settings.doorGloss))
                 {
                     Settings.doorGloss = 0.4f;
+                }
+
+                Settings.doorsMoveSound = settings.GetValue("doorsMoveSound");
+                if (string.IsNullOrEmpty(Settings.doorsMoveSound))
+                {
+                    Settings.doorsMoveSound = "Sigma/EditorView/Sounds/DoorMove";
+                }
+
+                Settings.doorsStopSound = settings.GetValue("doorsStopSound");
+                if (string.IsNullOrEmpty(Settings.doorsStopSound))
+                {
+                    Settings.doorsStopSound = "Sigma/EditorView/Sounds/DoorStop";
                 }
             }
         }
