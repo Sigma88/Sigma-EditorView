@@ -140,6 +140,9 @@ namespace SigmaEditorViewPlugin
                         // Set Position of Source relative to VAB
                         positions[i] = source.transform.position - EditorBuildings.VABposition;
                     }
+
+                    // Add FlareCamera component
+                    clone.AddOrGetComponent<FlareCamera>();
                 }
             }
         }
