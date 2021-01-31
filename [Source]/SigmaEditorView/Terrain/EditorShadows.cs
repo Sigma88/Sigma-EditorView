@@ -18,7 +18,7 @@ namespace SigmaEditorViewPlugin
 
         internal static void Apply(EditorFacility editor)
         {
-            Debug.Log("EditorTerrain.Apply", "editor = " + editor);
+            Debug.Log("EditorShadows.Apply", "editor = " + editor);
 
             GameObject ksc = GameObject.Find("SpaceCenter");
             Debug.Log("EditorShadows.Apply", "ksc = " + ksc);
