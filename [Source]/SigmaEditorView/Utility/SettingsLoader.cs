@@ -45,6 +45,11 @@ namespace SigmaEditorViewPlugin
                     Settings.doorsSound = true;
                 }
 
+                if (!bool.TryParse(settings.GetValue("editorSunFlares"), out Settings.editorSunFlares))
+                {
+                    Settings.editorSunFlares = true;
+                }
+
                 Settings.doorTex = Resources.FindObjectsOfTypeAll<Texture>().FirstOrDefault(t => t.name == settings.GetValue("doorTex")) ?? Resources.FindObjectsOfTypeAll<Texture>().FirstOrDefault(t => t.name == "NissenHut_d");
 
                 Settings.doorBump = Resources.FindObjectsOfTypeAll<Texture>().FirstOrDefault(t => t.name == settings.GetValue("doorBump")) ?? Resources.FindObjectsOfTypeAll<Texture>().FirstOrDefault(t => t.name == "NissenHut_n");
