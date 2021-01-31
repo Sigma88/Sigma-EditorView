@@ -116,8 +116,8 @@ namespace SigmaEditorViewPlugin
             internal Vector3 close = Vector3.one;
             internal int direction = 1;  // -1 = open, 1 = close
             internal float position = 0; //  0 = open, 1 = close
-            AudioSource doorSound;
-            AudioClip doorStop;
+            static AudioSource doorSound;
+            static AudioClip doorStop;
 
             internal void Reverse()
             {
@@ -134,11 +134,12 @@ namespace SigmaEditorViewPlugin
                 close = transform.position;
                 transform.position = Settings.closeDoors ? close : open;
 
-                if (Settings.doorsSound)
+                if (Settings.doorsSound && !doorSound && !doorStop)
                 {
                     doorSound = gameObject.AddOrGetComponent<AudioSource>();
                     doorSound.clip = Resources.FindObjectsOfTypeAll<AudioClip>().FirstOrDefault(c => c.name == Settings.doorsMoveSound);
                     doorSound.loop = true;
+                    doorSound.volume = 0.3f;
                     doorStop = Resources.FindObjectsOfTypeAll<AudioClip>().FirstOrDefault(c => c.name == Settings.doorsStopSound);
                 }
             }
