@@ -40,6 +40,7 @@ namespace SigmaEditorViewPlugin
             {
                 GameObject topBar = GameObject.Find("Top Bar");
                 GameObject buttonCrew = topBar.GetChild("ButtonPanelCrew");
+                GameObject buttonCargo = topBar.GetChild("ButtonPanelCargo");
                 GameObject buttonEditor = topBar.GetChild("ButtonPanelEditor");
 
                 Button oldButton = buttonCrew.GetComponent<Button>();
@@ -49,9 +50,9 @@ namespace SigmaEditorViewPlugin
                 GameObject buttonDoor2 = Object.Instantiate(buttonCrew);
                 buttonDoor2.transform.SetParent(topBar.transform);
 
-                buttonDoor1.transform.position = buttonDoor2.transform.position = buttonEditor.transform.position + (buttonEditor.transform.position - buttonCrew.transform.position) * 2;
-                buttonDoor1.transform.localScale = buttonDoor2.transform.localScale = buttonCrew.transform.localScale;
-                buttonDoor1.transform.rotation = buttonDoor2.transform.rotation = buttonCrew.transform.rotation;
+                buttonDoor1.transform.position = buttonDoor2.transform.position = buttonEditor.transform.position + (buttonEditor.transform.position - buttonCargo.transform.position) * (Settings.toggleLights ? 2 : 1);
+                buttonDoor1.transform.localScale = buttonDoor2.transform.localScale = buttonCargo.transform.localScale;
+                buttonDoor1.transform.rotation = buttonDoor2.transform.rotation = buttonCargo.transform.rotation;
 
 
                 Texture2D textureOFF = Resources.FindObjectsOfTypeAll<Texture2D>().FirstOrDefault(t => t.name == "Sigma/EditorView/Textures/DoorOFF");
