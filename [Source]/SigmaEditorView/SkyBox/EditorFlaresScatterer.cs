@@ -15,8 +15,11 @@ namespace SigmaEditorViewPlugin
         {
             Debug.Log("EditorFlaresScatterer.Update");
 
-            DestroyAll();
-            Duplicate(Resources.FindObjectsOfTypeAll<MonoBehaviour>().Where(mb => mb?.GetType()?.FullName == "scatterer.SunFlare")?.ToArray());
+            if (Settings.editorSunFlares)
+            {
+                DestroyAll();
+                Duplicate(Resources.FindObjectsOfTypeAll<MonoBehaviour>().Where(mb => mb?.GetType()?.FullName == "scatterer.SunFlare")?.ToArray());
+            }
         }
 
         internal static void OnPreRender(EditorFacility editor)
