@@ -50,12 +50,12 @@ namespace SigmaEditorViewPlugin
                     // Calculate sunViewPortPos
                     Vector3 sunViewPortPos = EditorCamera.Instance.cam.WorldToViewportPoint(EditorView.Rotation * position);
 
+                    // Set the correct sunViewPortPos
+                    material.SetVector("sunViewPortPos", sunViewPortPos);
+
                     // Only Display the flare if it is visible
                     if (sunViewPortPos.z > 0)
                     {
-                        // Set the correct sunViewPortPos
-                        material.SetVector("sunViewPortPos", sunViewPortPos);
-
                         // Set Other Properties
                         material.SetFloat(Shader.PropertyToID("renderSunFlare"), 1.0f);
                         material.SetFloat(Shader.PropertyToID("renderOnCurrentCamera"), 1.0f);
