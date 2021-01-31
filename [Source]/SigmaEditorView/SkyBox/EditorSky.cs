@@ -38,7 +38,6 @@ namespace SigmaEditorViewPlugin
     internal static class EditorSky
     {
         static RenderTexture cubemap;
-        static bool scatterer = AssemblyLoader.loadedAssemblies.FirstOrDefault(a => a.name == "scatterer") != null;
         static Vector3 vabOffset = new Vector3(110, 50, -50);
         static Vector3 vabRealOffset;
 
