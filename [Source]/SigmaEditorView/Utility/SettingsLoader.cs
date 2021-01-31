@@ -7,8 +7,10 @@ namespace SigmaEditorViewPlugin
     internal static class Settings
     {
         internal static int size = 1024;
+        internal static bool toggleLights = true;
         internal static bool closeDoors = false;
-        internal static bool toggleDoors = false; // change to 'true' when the feature is completely fixed
+        internal static bool toggleDoors = true;
+        internal static bool doorsSound = true;
         internal static bool editorSunFlares = true;
         internal static Texture doorTex;
         internal static Texture doorBump;
@@ -42,7 +44,7 @@ namespace SigmaEditorViewPlugin
 
                 if (!bool.TryParse(settings.GetValue("toggleDoors"), out Settings.toggleDoors))
                 {
-                    Settings.toggleDoors = false; // change to 'true' when the feature is completely fixed
+                    Settings.toggleDoors = true;
                 }
 
                 if (!bool.TryParse(settings.GetValue("doorsSound"), out Settings.doorsSound))
