@@ -319,7 +319,7 @@ namespace SigmaEditorViewPlugin
             }
         }
 
-        class Remover : MonoBehaviour
+        internal class Remover : MonoBehaviour
         {
             EditorFacility editor;
 

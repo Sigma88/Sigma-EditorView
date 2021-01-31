@@ -3,7 +3,7 @@
 
 namespace SigmaEditorViewPlugin
 {
-    static class EditorView
+    internal static class EditorView
     {
         static Quaternion _VABrot;
         static Quaternion _SPHrot;

@@ -3,7 +3,7 @@
 
 namespace SigmaEditorViewPlugin
 {
-    static class EditorFlares
+    internal static class EditorFlares
     {
         static LensFlare[] lensFlares;
         static Quaternion[] rotations;

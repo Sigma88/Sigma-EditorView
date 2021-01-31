@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace SigmaEditorViewPlugin
 {
-    static class EditorBuildings
+    internal static class EditorBuildings
     {
         static Vector3 SPHposition;
 
