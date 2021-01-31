@@ -19,6 +19,8 @@ namespace SigmaEditorViewPlugin
         {
             Debug.Log("EditorLight.Apply", "editor = " + editor);
 
+            if (Settings.toggleLights)
+            {
             // Fix Light
             GameObject lightObject = GameObject.Find("SpotlightSun") ?? GameObject.Find("ExteriorSun") ?? GameObject.Find("Realtime_ExteriorSun");
             Debug.Log("EditorLight.Apply", "lightObject = " + lightObject);
@@ -117,6 +119,7 @@ namespace SigmaEditorViewPlugin
 
             newButton1.gameObject.SetActive(true);
             newButton2.gameObject.SetActive(false);
+            }
         }
 
         static void OnButtonClick()

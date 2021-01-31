@@ -35,6 +35,11 @@ namespace SigmaEditorViewPlugin
 
                 bool.TryParse(settings.GetValue("closeDoors"), out Settings.closeDoors);
 
+                if (!bool.TryParse(settings.GetValue("toggleLights"), out Settings.toggleLights))
+                {
+                    Settings.toggleLights = true;
+                }
+
                 if (!bool.TryParse(settings.GetValue("toggleDoors"), out Settings.toggleDoors))
                 {
                     Settings.toggleDoors = false; // change to 'true' when the feature is completely fixed
