@@ -11,13 +11,13 @@ namespace SigmaEditorViewPlugin
 
             // Fix the sceneryCam
             Camera sceneryCam = EditorCamera.Instance?.gameObject?.GetChild("sceneryCam")?.GetComponent<Camera>();
+            Debug.Log("AmbientSettings.Apply", "Main Camera = " + EditorCamera.Instance.cam.farClipPlane);
             Debug.Log("AmbientSettings.Apply", "sceneryCam = " + sceneryCam);
 
-            if (sceneryCam != null)
-            {
-                EditorCamera.Instance.cam.nearClipPlane = sceneryCam.nearClipPlane = 0.45f;
-                EditorCamera.Instance.cam.farClipPlane = sceneryCam.farClipPlane = 2000;
-            }
+            EditorCamera.Instance.cam.farClipPlane = sceneryCam.farClipPlane = 100000;
+            QualitySettings.shadowDistance = 2000;
+            QualitySettings.shadowCascade2Split = 0.01f;
+            QualitySettings.shadowCascade4Split = new Vector3(0.005f, 0.01f, 0.05f);
 
             // Fix the fog
             RenderSettings.fog = false;

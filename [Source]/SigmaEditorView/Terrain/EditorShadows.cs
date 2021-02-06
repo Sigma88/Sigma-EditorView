@@ -42,8 +42,7 @@ namespace SigmaEditorViewPlugin
 
             if (shadowPlane != null)
             {
-                //shadowPlane.transform.localScale += new Vector3(4000, 0, 4000);
-                shadowPlane.SetActive(false);
+                shadowPlane.transform.localScale += new Vector3(4000, 0, 4000);
             }
         }
     }
