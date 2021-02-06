@@ -15,8 +15,8 @@ namespace SigmaEditorViewPlugin
 
             if (sceneryCam != null)
             {
-                sceneryCam.nearClipPlane = 0.45f;
-                sceneryCam.farClipPlane = 2000;
+                EditorCamera.Instance.cam.nearClipPlane = sceneryCam.nearClipPlane = 0.45f;
+                EditorCamera.Instance.cam.farClipPlane = sceneryCam.farClipPlane = 2000;
             }
 
             // Fix the fog
