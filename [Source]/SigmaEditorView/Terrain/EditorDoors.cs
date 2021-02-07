@@ -7,7 +7,7 @@ using KSP.UI.TooltipTypes;
 
 namespace SigmaEditorViewPlugin
 {
-    internal static class EditorDoor
+    internal static class EditorDoors
     {
         internal static GameObject shadeL;
         internal static GameObject doorL;
@@ -25,11 +25,11 @@ namespace SigmaEditorViewPlugin
 
         internal static void Apply(EditorFacility editor)
         {
-            Debug.Log("EditorDoor.Apply", "editor = " + editor);
+            Debug.Log("EditorDoors.Apply", "editor = " + editor);
 
             // Renderer
-            Debug.Log("EditorDoor.Apply", "doorL = " + doorL + ", shadeL = " + shadeL);
-            Debug.Log("EditorDoor.Apply", "doorR = " + doorR + ", shadeR = " + shadeR);
+            Debug.Log("EditorDoors.Apply", "doorL = " + doorL + ", shadeL = " + shadeL);
+            Debug.Log("EditorDoors.Apply", "doorR = " + doorR + ", shadeR = " + shadeR);
 
             if (doorState == null)
             {
@@ -40,6 +40,7 @@ namespace SigmaEditorViewPlugin
             {
                 GameObject topBar = GameObject.Find("Top Bar");
                 GameObject buttonCrew = topBar.GetChild("ButtonPanelCrew");
+                GameObject buttonCargo = topBar.GetChild("ButtonPanelCargo");
                 GameObject buttonEditor = topBar.GetChild("ButtonPanelEditor");
 
                 Button oldButton = buttonCrew.GetComponent<Button>();
@@ -49,9 +50,9 @@ namespace SigmaEditorViewPlugin
                 GameObject buttonDoor2 = Object.Instantiate(buttonCrew);
                 buttonDoor2.transform.SetParent(topBar.transform);
 
-                buttonDoor1.transform.position = buttonDoor2.transform.position = buttonEditor.transform.position + (buttonEditor.transform.position - buttonCrew.transform.position) * 2;
-                buttonDoor1.transform.localScale = buttonDoor2.transform.localScale = buttonCrew.transform.localScale;
-                buttonDoor1.transform.rotation = buttonDoor2.transform.rotation = buttonCrew.transform.rotation;
+                buttonDoor1.transform.position = buttonDoor2.transform.position = buttonEditor.transform.position + (buttonEditor.transform.position - buttonCargo.transform.position) * (Settings.toggleLights ? 2 : 1);
+                buttonDoor1.transform.localScale = buttonDoor2.transform.localScale = buttonCargo.transform.localScale;
+                buttonDoor1.transform.rotation = buttonDoor2.transform.rotation = buttonCargo.transform.rotation;
 
 
                 Texture2D textureOFF = Resources.FindObjectsOfTypeAll<Texture2D>().FirstOrDefault(t => t.name == "Sigma/EditorView/Textures/DoorOFF");
@@ -115,13 +116,13 @@ namespace SigmaEditorViewPlugin
             internal Vector3 close = Vector3.one;
             internal int direction = 1;  // -1 = open, 1 = close
             internal float position = 0; //  0 = open, 1 = close
-            AudioSource doorSound;
-            AudioClip doorStop;
+            internal AudioSource doorSound;
+            internal AudioClip doorStop;
 
             internal void Reverse()
             {
                 direction *= -1;
-                doorSound.Stop();
+                Stop(false);
             }
 
             void Start()
@@ -133,41 +134,61 @@ namespace SigmaEditorViewPlugin
                 close = transform.position;
                 transform.position = Settings.closeDoors ? close : open;
 
-                doorSound = gameObject.AddOrGetComponent<AudioSource>();
-                doorSound.clip = Resources.FindObjectsOfTypeAll<AudioClip>().FirstOrDefault(c => c.name == "Sigma/EditorView/Sounds/DoorMove");
-                doorSound.loop = true;
-                doorStop = Resources.FindObjectsOfTypeAll<AudioClip>().FirstOrDefault(c => c.name == "Sigma/EditorView/Sounds/DoorStop");
+                if (Settings.doorsSound && !doorSound && !doorStop)
+                {
+                    doorSound = gameObject.AddOrGetComponent<AudioSource>();
+                    doorSound.clip = Resources.FindObjectsOfTypeAll<AudioClip>().FirstOrDefault(c => c.name == Settings.doorsMoveSound);
+                    doorSound.loop = true;
+                    doorSound.volume = 0.2f;
+                    doorStop = Resources.FindObjectsOfTypeAll<AudioClip>().FirstOrDefault(c => c.name == Settings.doorsStopSound);
+                }
             }
 
             void Update()
             {
                 if (direction > 0 && position < 1)
                 {
-                    if (!doorSound.isPlaying)
-                        doorSound.Play();
-
+                    Play();
                     position += 0.2f * Time.deltaTime;
                     if (position >= 1)
                     {
                         position = 1;
-                        doorSound.Stop();
-                        doorSound.PlayOneShot(doorStop);
+                        Stop();
                     }
                     transform.position = Vector3.Lerp(open, close, position);
                 }
                 else if (direction < 0 && position > 0)
                 {
-                    if (!doorSound.isPlaying)
-                        doorSound.Play();
-
+                    Play();
                     position -= 0.2f * Time.deltaTime;
                     if (position <= 0)
                     {
                         position = 0;
-                        doorSound.Stop();
-                        doorSound.PlayOneShot(doorStop);
+                        Stop();
                     }
                     transform.position = Vector3.Lerp(open, close, position);
+                }
+            }
+
+            void Play()
+            {
+                if (Settings.doorsSound)
+                {
+                    if (!doorSound.isPlaying)
+                        doorSound.Play();
+                }
+            }
+
+            void Stop(bool end = true)
+            {
+                if (Settings.doorsSound)
+                {
+                    doorSound.Stop();
+
+                    if (end)
+                    {
+                        doorSound.PlayOneShot(doorStop);
+                    }
                 }
             }
         }

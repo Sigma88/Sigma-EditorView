@@ -4,9 +4,56 @@ using UnityEngine;
 
 namespace SigmaEditorViewPlugin
 {
-    static class EditorBuildings
+    internal static class EditorBuildings
     {
-        static Vector3 SPHposition;
+        static Vector3 _VABposition;
+
+        internal static Vector3 VABposition
+        {
+            get
+            {
+                if (HighLogic.LoadedScene == GameScenes.SPACECENTER)
+                {
+                    // Find KSC
+                    PQSCity ksc = SpaceCenter.Instance?.SpaceCenterTransform?.parent?.GetComponentInChildren<PQSCity>();
+
+                    if (ksc)
+                    {
+                        // VAB position
+                        _VABposition = ksc.transform.position +
+                                       Vector3.Scale(ksc.transform.localScale, ksc.transform.right.normalized) * -186.3f +
+                                       Vector3.Scale(ksc.transform.localScale, ksc.transform.up.normalized) * +24.8f;
+                    }
+                }
+
+                return _VABposition;
+            }
+        }
+
+        static Vector3 _SPHposition;
+
+        internal static Vector3 SPHposition
+        {
+            get
+            {
+                if (HighLogic.LoadedScene == GameScenes.SPACECENTER)
+                {
+                    // Find KSC
+                    PQSCity ksc = SpaceCenter.Instance?.SpaceCenterTransform?.parent?.GetComponentInChildren<PQSCity>();
+
+                    if (ksc)
+                    {
+                        // SPH position
+                        _SPHposition = ksc.transform.position +
+                                       Vector3.Scale(ksc.transform.localScale, ksc.transform.right.normalized) * -157.6f +
+                                       Vector3.Scale(ksc.transform.localScale, ksc.transform.up.normalized) * -0.1f +
+                                       Vector3.Scale(ksc.transform.localScale, ksc.transform.forward.normalized) * 263.5f;
+                    }
+                }
+
+                return _SPHposition;
+            }
+        }
 
         static GameObject[] buildings;
         static Vector3[] positions;
@@ -100,15 +147,6 @@ namespace SigmaEditorViewPlugin
             // Find KSC
             PQSCity ksc = SpaceCenter.Instance?.SpaceCenterTransform?.parent?.GetComponentInChildren<PQSCity>();
             if (ksc == null) return;
-
-            // VAB position
-            Vector3 VABposition = ksc.transform.position +
-                                  ksc.transform.right.normalized * -186.3f +
-                                  ksc.transform.up.normalized * +24.8f;
-            // SPH position
-            SPHposition = ksc.transform.right.normalized * -157.6f +
-                          ksc.transform.up.normalized * -0.1f +
-                          ksc.transform.forward.normalized * 263.5f;
 
             // Find Radius
             float radius = (float)FlightGlobals.GetHomeBody().Radius;

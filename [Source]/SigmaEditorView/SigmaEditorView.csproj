@@ -34,11 +34,12 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="EditorView.cs" />
+    <Compile Include="SkyBox\EditorFlaresScatterer.cs" />
     <Compile Include="SkyBox\FlareCamera.cs" />
     <Compile Include="SkyBox\FlareRemover.cs" />
     <Compile Include="Terrain\AmbientSettings.cs" />
     <Compile Include="Terrain\EditorBuildings.cs" />
-    <Compile Include="Terrain\EditorDoor.cs" />
+    <Compile Include="Terrain\EditorDoors.cs" />
     <Compile Include="Terrain\EditorLight.cs" />
     <Compile Include="Terrain\EditorShadows.cs" />
     <Compile Include="Terrain\EditorTerrain.cs" />
@@ -81,10 +82,6 @@
     <Reference Include="UnityEngine.UI, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\[References]\KerbalSpaceProgram\UnityEngine.UI.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UnityWebRequestWWWModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\[References]\KerbalSpaceProgram\UnityEngine.UnityWebRequestWWWModule.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup />
