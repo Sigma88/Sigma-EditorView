@@ -250,7 +250,7 @@ namespace SigmaEditorViewPlugin
         {
             Debug.Log("EditorColliders.DebugColliders");
 
-            string path = "GameData/Sigma/EditorView/Debug/Colliders/";
+            string path = "GameData/SigmaEditorView/Debug/Colliders/";
 
             foreach (string name in innerWalls.Keys)
             {
@@ -293,7 +293,7 @@ namespace SigmaEditorViewPlugin
         {
             Debug.Log("EditorColliders.DebugShadows");
 
-            string path = "GameData/Sigma/EditorView/Debug/Shadows/";
+            string path = "GameData/SigmaEditorView/Debug/Shadows/";
 
             foreach (string name in outerWalls.Keys)
             {

@@ -55,8 +55,8 @@ namespace SigmaEditorViewPlugin
                 buttonDoor1.transform.rotation = buttonDoor2.transform.rotation = buttonCargo.transform.rotation;
 
 
-                Texture2D textureOFF = Resources.FindObjectsOfTypeAll<Texture2D>().FirstOrDefault(t => t.name == "Sigma/EditorView/Textures/DoorOFF");
-                Texture2D textureON = Resources.FindObjectsOfTypeAll<Texture2D>().FirstOrDefault(t => t.name == "Sigma/EditorView/Textures/DoorON");
+                Texture2D textureOFF = Resources.FindObjectsOfTypeAll<Texture2D>().FirstOrDefault(t => t.name == "SigmaEditorView/Textures/DoorOFF");
+                Texture2D textureON = Resources.FindObjectsOfTypeAll<Texture2D>().FirstOrDefault(t => t.name == "SigmaEditorView/Textures/DoorON");
 
                 Object.DestroyImmediate(buttonDoor1.GetComponent<Button>());
                 newButton1 = buttonDoor1.AddOrGetComponent<Button>();

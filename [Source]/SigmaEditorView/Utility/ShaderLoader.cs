@@ -15,7 +15,7 @@ namespace SigmaEditorViewPlugin
             {
                 if (_shader == null)
                 {
-                    LoadAssetBundle("Sigma/EditorView/Shaders/", "EditorSkyBox");
+                    LoadAssetBundle("SigmaEditorView/Shaders/", "EditorSkyBox");
                     _shader = GetShader("SigmaEditorView/EditorSkyBox");
                 }
 

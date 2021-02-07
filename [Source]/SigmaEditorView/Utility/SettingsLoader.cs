@@ -76,13 +76,13 @@ namespace SigmaEditorViewPlugin
                 Settings.doorsMoveSound = settings.GetValue("doorsMoveSound");
                 if (string.IsNullOrEmpty(Settings.doorsMoveSound))
                 {
-                    Settings.doorsMoveSound = "Sigma/EditorView/Sounds/DoorMove";
+                    Settings.doorsMoveSound = "SigmaEditorView/Sounds/DoorMove";
                 }
 
                 Settings.doorsStopSound = settings.GetValue("doorsStopSound");
                 if (string.IsNullOrEmpty(Settings.doorsStopSound))
                 {
-                    Settings.doorsStopSound = "Sigma/EditorView/Sounds/DoorStop";
+                    Settings.doorsStopSound = "SigmaEditorView/Sounds/DoorStop";
                 }
             }
         }

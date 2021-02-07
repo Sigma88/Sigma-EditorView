@@ -81,8 +81,8 @@ namespace SigmaEditorViewPlugin
                 buttonLight2.transform.localScale = buttonCargo.transform.localScale;
                 buttonLight2.transform.rotation = buttonCargo.transform.rotation;
 
-                Texture2D textureOFF = Resources.FindObjectsOfTypeAll<Texture2D>().FirstOrDefault(t => t.name == "Sigma/EditorView/Textures/LightsOFF");
-                Texture2D textureON = Resources.FindObjectsOfTypeAll<Texture2D>().FirstOrDefault(t => t.name == "Sigma/EditorView/Textures/LightsON");
+                Texture2D textureOFF = Resources.FindObjectsOfTypeAll<Texture2D>().FirstOrDefault(t => t.name == "SigmaEditorView/Textures/LightsOFF");
+                Texture2D textureON = Resources.FindObjectsOfTypeAll<Texture2D>().FirstOrDefault(t => t.name == "SigmaEditorView/Textures/LightsON");
 
                 Object.DestroyImmediate(buttonLight1.GetComponent<Button>());
                 newButton1 = buttonLight1.AddOrGetComponent<Button>();
