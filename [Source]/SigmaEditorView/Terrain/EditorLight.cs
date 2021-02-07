@@ -62,10 +62,10 @@ namespace SigmaEditorViewPlugin
                 Switch lightSwitch = building.AddOrGetComponent<Switch>();
 
 
-                GameObject topBar = GameObject.Find("Top Bar");
-                GameObject buttonCrew = topBar.GetChild("ButtonPanelCrew");
-                GameObject buttonCargo = topBar.GetChild("ButtonPanelCargo");
-                GameObject buttonEditor = topBar.GetChild("ButtonPanelEditor");
+                GameObject buttonCrew = EditorLogic.fetch.crewPanelBtn.gameObject;
+                GameObject buttonCargo = EditorLogic.fetch.cargoPanelBtn.gameObject;
+                GameObject buttonEditor = EditorLogic.fetch.switchEditorBtn.gameObject;
+                GameObject topBar = buttonCrew.transform.parent.gameObject;
 
                 Button oldButton = buttonCrew.GetComponent<Button>();
 
