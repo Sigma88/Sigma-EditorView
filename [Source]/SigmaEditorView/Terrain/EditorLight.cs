@@ -19,104 +19,107 @@ namespace SigmaEditorViewPlugin
         {
             Debug.Log("EditorLight.Apply", "editor = " + editor);
 
-            // Fix Light
-            GameObject lightObject = GameObject.Find("SpotlightSun") ?? GameObject.Find("ExteriorSun") ?? GameObject.Find("Realtime_ExteriorSun");
-            Debug.Log("EditorLight.Apply", "lightObject = " + lightObject);
-
-            if (lightObject != null)
+            if (Settings.toggleLights)
             {
-                Light light = lightObject.GetComponent<Light>();
-                Debug.Log("EditorLight.Apply", "light = " + light);
+                // Fix Light
+                GameObject lightObject = GameObject.Find("SpotlightSun") ?? GameObject.Find("ExteriorSun") ?? GameObject.Find("Realtime_ExteriorSun");
+                Debug.Log("EditorLight.Apply", "lightObject = " + lightObject);
 
-                if (light != null)
+                if (lightObject != null)
                 {
-                    light.range = 3500;
-                    light.intensity = 5;
-                    light.spotAngle = 89;
-                    light.cullingMask = 1 << 0 | 1 << 15;
+                    Light light = lightObject.GetComponent<Light>();
+                    Debug.Log("EditorLight.Apply", "light = " + light);
 
-                    if (editor == EditorFacility.SPH)
+                    if (light != null)
                     {
-                        light.transform.position = new Vector3(0, 1800, 400);
-                        light.transform.eulerAngles = new Vector3(61, 0, 0);
-                    }
-                    else
-                    {
-                        light.transform.position = new Vector3(400, 1800, 0);
-                        light.transform.eulerAngles = new Vector3(61, 90, 0);
+                        light.range = 3500;
+                        light.intensity = 5;
+                        light.spotAngle = 89;
+                        light.cullingMask = 1 << 0 | 1 << 15;
+
+                        if (editor == EditorFacility.SPH)
+                        {
+                            light.transform.position = new Vector3(0, 1800, 400);
+                            light.transform.eulerAngles = new Vector3(61, 0, 0);
+                        }
+                        else
+                        {
+                            light.transform.position = new Vector3(400, 1800, 0);
+                            light.transform.eulerAngles = new Vector3(61, 90, 0);
+                        }
                     }
                 }
+
+
+                // LightSwitch
+
+                GameObject building;
+                if (EditorDriver.editorFacility == EditorFacility.SPH)
+                    building = GameObject.Find("SPHlvl1") ?? GameObject.Find("SPHlvl2") ?? GameObject.Find("SPHmodern");
+                else
+                    building = GameObject.Find("VABlvl2") ?? GameObject.Find("VABlvl3") ?? GameObject.Find("VABmodern");
+
+                Switch lightSwitch = building.AddOrGetComponent<Switch>();
+
+
+                GameObject topBar = GameObject.Find("Top Bar");
+                GameObject buttonCrew = topBar.GetChild("ButtonPanelCrew");
+                GameObject buttonCargo = topBar.GetChild("ButtonPanelCargo");
+                GameObject buttonEditor = topBar.GetChild("ButtonPanelEditor");
+
+                Button oldButton = buttonCrew.GetComponent<Button>();
+
+                GameObject buttonLight1 = Object.Instantiate(buttonCrew);
+                buttonLight1.transform.SetParent(topBar.transform);
+                buttonLight1.transform.position = buttonEditor.transform.position * 2 - buttonCargo.transform.position;
+                buttonLight1.transform.localScale = buttonCargo.transform.localScale;
+                buttonLight1.transform.rotation = buttonCargo.transform.rotation;
+
+                GameObject buttonLight2 = Object.Instantiate(buttonCrew);
+                buttonLight2.transform.SetParent(topBar.transform);
+                buttonLight2.transform.position = buttonEditor.transform.position * 2 - buttonCargo.transform.position;
+                buttonLight2.transform.localScale = buttonCargo.transform.localScale;
+                buttonLight2.transform.rotation = buttonCargo.transform.rotation;
+
+                Texture2D textureOFF = Resources.FindObjectsOfTypeAll<Texture2D>().FirstOrDefault(t => t.name == "Sigma/EditorView/Textures/LightsOFF");
+                Texture2D textureON = Resources.FindObjectsOfTypeAll<Texture2D>().FirstOrDefault(t => t.name == "Sigma/EditorView/Textures/LightsON");
+
+                Object.DestroyImmediate(buttonLight1.GetComponent<Button>());
+                newButton1 = buttonLight1.AddOrGetComponent<Button>();
+                newButton1.image = buttonLight1.GetComponent<Image>();
+
+                Object.DestroyImmediate(buttonLight2.GetComponent<Button>());
+                newButton2 = buttonLight2.AddOrGetComponent<Button>();
+                newButton2.image = buttonLight2.GetComponent<Image>();
+
+                buttonLight1.GetComponent<TooltipController_Text>().textString = buttonLight2.GetComponent<TooltipController_Text>().textString = "Toggle Lights";
+
+                newButton1.transition = Selectable.Transition.SpriteSwap;
+                newButton1.spriteState = lightsON = new SpriteState
+                {
+                    highlightedSprite = Sprite.Create(textureON, new Rect(128, 128, 128, 128), Vector2.zero),
+                    pressedSprite = Sprite.Create(textureON, new Rect(0, 0, 128, 128), Vector2.zero),
+                    disabledSprite = Sprite.Create(textureON, new Rect(128, 0, 128, 128), Vector2.zero)
+                };
+                newButton1.image.sprite = spriteON = Sprite.Create(textureON, new Rect(0, 128, 128, 128), Vector2.zero);
+
+                newButton2.transition = Selectable.Transition.SpriteSwap;
+                newButton2.spriteState = lightsOFF = new SpriteState
+                {
+                    highlightedSprite = Sprite.Create(textureOFF, new Rect(128, 128, 128, 128), Vector2.zero),
+                    pressedSprite = Sprite.Create(textureOFF, new Rect(0, 0, 128, 128), Vector2.zero),
+                    disabledSprite = Sprite.Create(textureOFF, new Rect(128, 0, 128, 128), Vector2.zero)
+                };
+                newButton2.image.sprite = spriteOFF = Sprite.Create(textureOFF, new Rect(0, 128, 128, 128), Vector2.zero);
+
+                newButton1.onClick.AddListener(OnButtonClick);
+                newButton1.onClick.AddListener(lightSwitch.Flip);
+                newButton2.onClick.AddListener(OnButtonClick);
+                newButton2.onClick.AddListener(lightSwitch.Flip);
+
+                newButton1.gameObject.SetActive(true);
+                newButton2.gameObject.SetActive(false);
             }
-
-
-            // LightSwitch
-
-            GameObject building;
-            if (EditorDriver.editorFacility == EditorFacility.SPH)
-                building = GameObject.Find("SPHlvl1") ?? GameObject.Find("SPHlvl2") ?? GameObject.Find("SPHmodern");
-            else
-                building = GameObject.Find("VABlvl2") ?? GameObject.Find("VABlvl3") ?? GameObject.Find("VABmodern");
-
-            Switch lightSwitch = building.AddOrGetComponent<Switch>();
-
-
-            GameObject topBar = GameObject.Find("Top Bar");
-            GameObject buttonCrew = topBar.GetChild("ButtonPanelCrew");
-            GameObject buttonCargo = topBar.GetChild("ButtonPanelCargo");
-            GameObject buttonEditor = topBar.GetChild("ButtonPanelEditor");
-
-            Button oldButton = buttonCrew.GetComponent<Button>();
-
-            GameObject buttonLight1 = Object.Instantiate(buttonCrew);
-            buttonLight1.transform.SetParent(topBar.transform);
-            buttonLight1.transform.position = buttonEditor.transform.position * 2 - buttonCargo.transform.position;
-            buttonLight1.transform.localScale = buttonCargo.transform.localScale;
-            buttonLight1.transform.rotation = buttonCargo.transform.rotation;
-
-            GameObject buttonLight2 = Object.Instantiate(buttonCrew);
-            buttonLight2.transform.SetParent(topBar.transform);
-            buttonLight2.transform.position = buttonEditor.transform.position * 2 - buttonCargo.transform.position;
-            buttonLight2.transform.localScale = buttonCargo.transform.localScale;
-            buttonLight2.transform.rotation = buttonCargo.transform.rotation;
-
-            Texture2D textureOFF = Resources.FindObjectsOfTypeAll<Texture2D>().FirstOrDefault(t => t.name == "Sigma/EditorView/Textures/LightsOFF");
-            Texture2D textureON = Resources.FindObjectsOfTypeAll<Texture2D>().FirstOrDefault(t => t.name == "Sigma/EditorView/Textures/LightsON");
-
-            Object.DestroyImmediate(buttonLight1.GetComponent<Button>());
-            newButton1 = buttonLight1.AddOrGetComponent<Button>();
-            newButton1.image = buttonLight1.GetComponent<Image>();
-
-            Object.DestroyImmediate(buttonLight2.GetComponent<Button>());
-            newButton2 = buttonLight2.AddOrGetComponent<Button>();
-            newButton2.image = buttonLight2.GetComponent<Image>();
-
-            buttonLight1.GetComponent<TooltipController_Text>().textString = buttonLight2.GetComponent<TooltipController_Text>().textString = "Toggle Lights";
-
-            newButton1.transition = Selectable.Transition.SpriteSwap;
-            newButton1.spriteState = lightsON = new SpriteState
-            {
-                highlightedSprite = Sprite.Create(textureON, new Rect(128, 128, 128, 128), Vector2.zero),
-                pressedSprite = Sprite.Create(textureON, new Rect(0, 0, 128, 128), Vector2.zero),
-                disabledSprite = Sprite.Create(textureON, new Rect(128, 0, 128, 128), Vector2.zero)
-            };
-            newButton1.image.sprite = spriteON = Sprite.Create(textureON, new Rect(0, 128, 128, 128), Vector2.zero);
-
-            newButton2.transition = Selectable.Transition.SpriteSwap;
-            newButton2.spriteState = lightsOFF = new SpriteState
-            {
-                highlightedSprite = Sprite.Create(textureOFF, new Rect(128, 128, 128, 128), Vector2.zero),
-                pressedSprite = Sprite.Create(textureOFF, new Rect(0, 0, 128, 128), Vector2.zero),
-                disabledSprite = Sprite.Create(textureOFF, new Rect(128, 0, 128, 128), Vector2.zero)
-            };
-            newButton2.image.sprite = spriteOFF = Sprite.Create(textureOFF, new Rect(0, 128, 128, 128), Vector2.zero);
-
-            newButton1.onClick.AddListener(OnButtonClick);
-            newButton1.onClick.AddListener(lightSwitch.Flip);
-            newButton2.onClick.AddListener(OnButtonClick);
-            newButton2.onClick.AddListener(lightSwitch.Flip);
-
-            newButton1.gameObject.SetActive(true);
-            newButton2.gameObject.SetActive(false);
         }
 
         static void OnButtonClick()

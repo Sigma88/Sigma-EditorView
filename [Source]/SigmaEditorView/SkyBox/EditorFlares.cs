@@ -3,7 +3,7 @@
 
 namespace SigmaEditorViewPlugin
 {
-    static class EditorFlares
+    internal static class EditorFlares
     {
         static LensFlare[] lensFlares;
         static Quaternion[] rotations;
@@ -12,8 +12,11 @@ namespace SigmaEditorViewPlugin
         {
             Debug.Log("EditorFlares.Update");
 
-            DestroyAll();
-            Duplicate(Resources.FindObjectsOfTypeAll<SunFlare>());
+            if (Settings.editorSunFlares)
+            {
+                DestroyAll();
+                Duplicate(Resources.FindObjectsOfTypeAll<SunFlare>());
+            }
         }
 
         internal static void Apply(EditorFacility editor)

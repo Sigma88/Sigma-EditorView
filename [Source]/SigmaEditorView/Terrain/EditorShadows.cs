@@ -18,7 +18,7 @@ namespace SigmaEditorViewPlugin
 
         internal static void Apply(EditorFacility editor)
         {
-            Debug.Log("EditorTerrain.Apply", "editor = " + editor);
+            Debug.Log("EditorShadows.Apply", "editor = " + editor);
 
             GameObject ksc = GameObject.Find("SpaceCenter");
             Debug.Log("EditorShadows.Apply", "ksc = " + ksc);
@@ -35,8 +35,6 @@ namespace SigmaEditorViewPlugin
             {
                 shadowsObject.transform.rotation = EditorView.Rotation * lightDirection;
                 shadowsObject.AddOrGetComponent<LightTracker>();
-
-                //shadowsObject.GetComponent<Light>().cullingMask = 1 << 0 | 1 << 15;
             }
 
             GameObject shadowPlane = GameObject.Find("ShadowPlane");
@@ -44,7 +42,7 @@ namespace SigmaEditorViewPlugin
 
             if (shadowPlane != null)
             {
-                shadowPlane.transform.localScale *= 100;
+                shadowPlane.transform.localScale += new Vector3(4000, 0, 4000);
             }
         }
     }

@@ -34,5 +34,24 @@ namespace SigmaEditorViewPlugin
         {
             return new Vector3(v.x, v.y, v.z + dz);
         }
+
+        internal static bool TryParse(this string s, out Vector2 v2)
+        {
+            v2 = Vector2.one;
+
+            string[] data = s?.Split(',');
+
+            if (data?.Length == 2)
+            {
+                if (float.TryParse(data[0], out float x) && float.TryParse(data[1], out float y))
+                {
+                    v2.x = x;
+                    v2.y = y;
+                    return true;
+                }
+            }
+
+            return false;
+        }
     }
 }

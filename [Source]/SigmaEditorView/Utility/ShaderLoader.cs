@@ -57,19 +57,17 @@ namespace SigmaEditorViewPlugin
 
             Debug.Log("ShaderLoader", "Loading asset bundle at path " + path);
 
-            using (WWW www = new WWW("file://" + fullPath))
+            AssetBundle bundle = AssetBundle.LoadFromFile(fullPath);
+            Shader[] shaders = bundle.LoadAllAssets<Shader>();
+
+            for (int i = 0; i < shaders?.Length; i++)
             {
-                AssetBundle bundle = www.assetBundle;
-                Shader[] shaders = bundle.LoadAllAssets<Shader>();
-
-                foreach (Shader shader in shaders)
-                {
-                    Debug.Log("ShaderLoader", "adding " + shader.name);
-                    shaderDictionary.Add(shader.name, shader);
-                }
-
-                bundle.Unload(false); // unload the raw asset bundle
+                Shader shader = shaders[i];
+                Debug.Log("ShaderLoader", "adding " + shader.name);
+                shaderDictionary.Add(shader.name, shader);
             }
+
+            bundle.Unload(false); // unload the raw asset bundle
         }
     }
 }
