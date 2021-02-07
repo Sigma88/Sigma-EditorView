@@ -1,5 +1,6 @@
 **v0.5.0**
 
+- Changed folder for better install automation (CurseForge client)
 - Updated to KSP 1.11.1
 - Fixed buttons positions
 - Added a toggle for doors in the editor scene
