@@ -33,7 +33,7 @@ To report a bug or to ask for support, open an issue on [GitHub](https://github.
 
 ### How To Install
 
-This mod can be installed and updated automatically using the [Twitch App](https://www.twitch.tv/downloads).
+This mod can be installed and updated automatically using the [CurseForge App](https://curseforge.overwolf.com/).
 
 To install the mod manually, follow these instructions:
 
