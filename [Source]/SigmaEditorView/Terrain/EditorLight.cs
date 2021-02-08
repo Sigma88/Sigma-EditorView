@@ -117,6 +117,9 @@ namespace SigmaEditorViewPlugin
                 newButton2.onClick.AddListener(OnButtonClick);
                 newButton2.onClick.AddListener(lightSwitch.Flip);
 
+                newButton1.gameObject.AddOrGetComponent<ButtonReset>();
+                newButton2.gameObject.AddOrGetComponent<ButtonReset>();
+
                 newButton1.gameObject.SetActive(true);
                 newButton2.gameObject.SetActive(false);
             }

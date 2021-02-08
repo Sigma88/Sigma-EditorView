@@ -90,6 +90,9 @@ namespace SigmaEditorViewPlugin
                 newButton1.onClick.AddListener(OnButtonClick);
                 newButton2.onClick.AddListener(OnButtonClick);
 
+                newButton1.gameObject.AddOrGetComponent<ButtonReset>();
+                newButton2.gameObject.AddOrGetComponent<ButtonReset>();
+
                 newButton1.gameObject.SetActive(doorState[editor]);
                 newButton2.gameObject.SetActive(!doorState[editor]);
             }
