@@ -65,14 +65,11 @@ namespace SigmaEditorViewPlugin
                 close = transform.position;
                 transform.position = Settings.closeDoors ? close : open;
 
-                if (Settings.doorsMoveSound)
-                {
-                    doorSound = gameObject.AddOrGetComponent<AudioSource>();
-                    doorSound.clip = Settings.doorsMoveSound;
-                    doorSound.loop = true;
-                    doorSound.volume = 0.2f;
-                }
+                doorSound = gameObject.AddOrGetComponent<AudioSource>();
+                doorSound.loop = true;
+                doorSound.volume = 0.2f;
 
+                doorSound.clip = Settings.doorsMoveSound;
                 doorStop = Settings.doorsStopSound;
             }
 
@@ -104,7 +101,7 @@ namespace SigmaEditorViewPlugin
 
             void Play()
             {
-                if (doorSound && !doorSound.isPlaying)
+                if (doorSound.clip && !doorSound.isPlaying)
                 {
                     doorSound.Play();
                 }
@@ -112,14 +109,14 @@ namespace SigmaEditorViewPlugin
 
             void Stop(bool end = true)
             {
-                if (doorSound)
+                if (doorSound.clip)
                 {
                     doorSound.Stop();
+                }
 
-                    if (end && doorStop)
-                    {
-                        doorSound.PlayOneShot(doorStop);
-                    }
+                if (end && doorStop)
+                {
+                    doorSound.PlayOneShot(doorStop);
                 }
             }
         }
