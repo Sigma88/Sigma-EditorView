@@ -7,7 +7,7 @@
 
 ### Downloads
 - [GitHub](https://github.com/Sigma88/Sigma-EditorView/releases)
-- [Curseforge](https://www.curseforge.com/kerbal/ksp-mods/sigma-editorview) (Automatic install available)
+- [CurseForge](https://www.curseforge.com/kerbal/ksp-mods/sigma-editorview) (Automatic install available)
 
 
 ### Other Links
