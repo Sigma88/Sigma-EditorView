@@ -50,6 +50,7 @@
     <Compile Include="SkyBox\EditorFlares.cs" />
     <Compile Include="SkyBox\EditorSky.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utility\EditorButtons.cs" />
     <Compile Include="Utility\Extensions.cs" />
     <Compile Include="Utility\SettingsLoader.cs" />
     <Compile Include="Utility\ShaderLoader.cs" />

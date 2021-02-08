@@ -1,20 +1,11 @@
 ﻿using System.Linq;
 using UnityEngine;
-using UnityEngine.UI;
-using KSP.UI.TooltipTypes;
 
 
 namespace SigmaEditorViewPlugin
 {
     internal static class EditorLight
     {
-        static Button newButton1;
-        static Button newButton2;
-        static SpriteState lightsON;
-        static SpriteState lightsOFF;
-        static Sprite spriteON;
-        static Sprite spriteOFF;
-
         internal static void Apply(EditorFacility editor)
         {
             Debug.Log("EditorLight.Apply", "editor = " + editor);
@@ -61,76 +52,9 @@ namespace SigmaEditorViewPlugin
 
                 Switch lightSwitch = building.AddOrGetComponent<Switch>();
 
-
-                GameObject buttonCrew = EditorLogic.fetch.crewPanelBtn.gameObject;
-                GameObject buttonCargo = EditorLogic.fetch.cargoPanelBtn.gameObject;
-                GameObject buttonEditor = EditorLogic.fetch.switchEditorBtn.gameObject;
-                GameObject topBar = buttonCrew.transform.parent.gameObject;
-
-                Button oldButton = buttonCrew.GetComponent<Button>();
-
-                GameObject buttonLight1 = Object.Instantiate(buttonCrew);
-                buttonLight1.transform.SetParent(topBar.transform);
-                buttonLight1.transform.position = buttonEditor.transform.position * 2 - buttonCargo.transform.position;
-                buttonLight1.transform.localScale = buttonCargo.transform.localScale;
-                buttonLight1.transform.rotation = buttonCargo.transform.rotation;
-
-                GameObject buttonLight2 = Object.Instantiate(buttonCrew);
-                buttonLight2.transform.SetParent(topBar.transform);
-                buttonLight2.transform.position = buttonEditor.transform.position * 2 - buttonCargo.transform.position;
-                buttonLight2.transform.localScale = buttonCargo.transform.localScale;
-                buttonLight2.transform.rotation = buttonCargo.transform.rotation;
-
-                Texture2D textureOFF = Resources.FindObjectsOfTypeAll<Texture2D>().FirstOrDefault(t => t.name == "SigmaEditorView/Textures/LightsOFF");
-                Texture2D textureON = Resources.FindObjectsOfTypeAll<Texture2D>().FirstOrDefault(t => t.name == "SigmaEditorView/Textures/LightsON");
-
-                Object.DestroyImmediate(buttonLight1.GetComponent<Button>());
-                newButton1 = buttonLight1.AddOrGetComponent<Button>();
-                newButton1.image = buttonLight1.GetComponent<Image>();
-
-                Object.DestroyImmediate(buttonLight2.GetComponent<Button>());
-                newButton2 = buttonLight2.AddOrGetComponent<Button>();
-                newButton2.image = buttonLight2.GetComponent<Image>();
-
-                buttonLight1.GetComponent<TooltipController_Text>().textString = buttonLight2.GetComponent<TooltipController_Text>().textString = "Toggle Lights";
-
-                newButton1.transition = Selectable.Transition.SpriteSwap;
-                newButton1.spriteState = lightsON = new SpriteState
-                {
-                    highlightedSprite = Sprite.Create(textureON, new Rect(128, 128, 128, 128), Vector2.zero),
-                    pressedSprite = Sprite.Create(textureON, new Rect(0, 0, 128, 128), Vector2.zero),
-                    disabledSprite = Sprite.Create(textureON, new Rect(128, 0, 128, 128), Vector2.zero)
-                };
-                newButton1.image.sprite = spriteON = Sprite.Create(textureON, new Rect(0, 128, 128, 128), Vector2.zero);
-
-                newButton2.transition = Selectable.Transition.SpriteSwap;
-                newButton2.spriteState = lightsOFF = new SpriteState
-                {
-                    highlightedSprite = Sprite.Create(textureOFF, new Rect(128, 128, 128, 128), Vector2.zero),
-                    pressedSprite = Sprite.Create(textureOFF, new Rect(0, 0, 128, 128), Vector2.zero),
-                    disabledSprite = Sprite.Create(textureOFF, new Rect(128, 0, 128, 128), Vector2.zero)
-                };
-                newButton2.image.sprite = spriteOFF = Sprite.Create(textureOFF, new Rect(0, 128, 128, 128), Vector2.zero);
-
-                newButton1.onClick.AddListener(OnButtonClick);
-                newButton1.onClick.AddListener(lightSwitch.Flip);
-                newButton2.onClick.AddListener(OnButtonClick);
-                newButton2.onClick.AddListener(lightSwitch.Flip);
-
-                newButton1.gameObject.AddOrGetComponent<ButtonReset>();
-                newButton2.gameObject.AddOrGetComponent<ButtonReset>();
-
-                newButton1.gameObject.SetActive(true);
-                newButton2.gameObject.SetActive(false);
+                EditorButtons.lightsOnBtn.onClick.AddListener(lightSwitch.Flip);
+                EditorButtons.lightsOffBtn.onClick.AddListener(lightSwitch.Flip);
             }
-        }
-
-        static void OnButtonClick()
-        {
-            bool state = !newButton1.isActiveAndEnabled;
-
-            newButton1.gameObject.SetActive(state);
-            newButton2.gameObject.SetActive(!state);
         }
 
         internal class Switch : MonoBehaviour
@@ -146,44 +70,44 @@ namespace SigmaEditorViewPlugin
                 if (name == "VABlvl2")
                 {
                     toggableObjects = new[]
-                    {
-                    gameObject.GetChild("SpotlightFlares")
-                };
+                        {
+                            gameObject.GetChild("SpotlightFlares")
+                        };
                 }
                 else if (name == "VABlvl3")
                 {
                     toggableObjects = new[]
-                    {
-                    gameObject.GetChild("VAB_Interior_BakeLights"),
-                    gameObject.GetChild("FloosLights")
-                };
+                        {
+                            gameObject.GetChild("VAB_Interior_BakeLights"),
+                            gameObject.GetChild("FloosLights")
+                        };
                 }
                 else if (name == "VABmodern")
                 {
                     toggableObjects = new[]
-                    {
-                    gameObject.GetChild("model_vab_interior_floor_cover_v20"),
-                    gameObject.GetChild("model_vab_interior_lights_accent_v16"),
-                    gameObject.GetChild("lights_bottom1"),
-                    gameObject.GetChild("lights_floor1"),
-                    gameObject.GetChild("lights_top1")
-                };
+                        {
+                            gameObject.GetChild("model_vab_interior_floor_cover_v20"),
+                            gameObject.GetChild("model_vab_interior_lights_accent_v16"),
+                            gameObject.GetChild("lights_bottom1"),
+                            gameObject.GetChild("lights_floor1"),
+                            gameObject.GetChild("lights_top1")
+                        };
                 }
                 else if (name == "SPHlvl1")
                 {
                     toggableObjects = new[]
-                    {
-                    gameObject.GetChild("Bakelights")
-                };
+                        {
+                            gameObject.GetChild("Bakelights")
+                        };
                 }
                 else if (name == "SPHmodern")
                 {
                     toggableObjects = new[]
-                    {
-                    gameObject.GetChild("rearWindowLightSplashes"),
-                    gameObject.GetChild("Component_749_1"),
-                    gameObject.GetChild("Component_750_1")
-                };
+                        {
+                            gameObject.GetChild("rearWindowLightSplashes"),
+                            gameObject.GetChild("Component_749_1"),
+                            gameObject.GetChild("Component_750_1")
+                        };
                 }
 
                 // Toggable 'Material's

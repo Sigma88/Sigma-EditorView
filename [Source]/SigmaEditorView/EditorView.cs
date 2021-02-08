@@ -59,6 +59,9 @@ namespace SigmaEditorViewPlugin
             EditorFlares.Apply(editor);
             EditorColliders.Apply(editor);
 
+            // UI
+            EditorButtons.Apply(editor);
+
             // Terrain
             AmbientSettings.Apply(editor);
             EditorTerrain.Apply(editor);

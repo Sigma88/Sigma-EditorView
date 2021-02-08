@@ -7,17 +7,17 @@ namespace SigmaEditorViewPlugin
     internal static class Settings
     {
         internal static int size = 1024;
-        internal static bool toggleLights = true;
-        internal static bool closeDoors = false;
-        internal static bool toggleDoors = true;
-        internal static bool doorsSound = true;
         internal static bool editorSunFlares = true;
-        internal static Texture doorTex;
-        internal static Texture doorBump;
-        internal static Vector2 doorTexScale = new Vector2(2, 3);
-        internal static float doorGloss = 0.4f;
-        internal static string doorsMoveSound;
-        internal static string doorsStopSound;
+        internal static bool toggleLights = true;
+        internal static bool toggleDoors = true;
+        internal static bool closeDoors = false;
+        internal static Texture doorsTexture;
+        internal static Texture doorsBump;
+        internal static Vector2 doorsTexScale = new Vector2(2, 3);
+        internal static float doorsGloss = 0.4f;
+        internal static AudioClip doorsMoveSound;
+        internal static AudioClip doorsStopSound;
+        internal static Texture2D cargoBtnTexture;
     }
 
     [KSPAddon(KSPAddon.Startup.MainMenu, true)]
@@ -37,7 +37,10 @@ namespace SigmaEditorViewPlugin
                     Settings.size = 1024;
                 }
 
-                bool.TryParse(settings.GetValue("closeDoors"), out Settings.closeDoors);
+                if (!bool.TryParse(settings.GetValue("editorSunFlares"), out Settings.editorSunFlares))
+                {
+                    Settings.editorSunFlares = true;
+                }
 
                 if (!bool.TryParse(settings.GetValue("toggleLights"), out Settings.toggleLights))
                 {
@@ -49,41 +52,27 @@ namespace SigmaEditorViewPlugin
                     Settings.toggleDoors = true;
                 }
 
-                if (!bool.TryParse(settings.GetValue("doorsSound"), out Settings.doorsSound))
+                bool.TryParse(settings.GetValue("closeDoors"), out Settings.closeDoors);
+
+                Settings.doorsTexture = Resources.FindObjectsOfTypeAll<Texture>().FirstOrDefault(t => t.name == settings.GetValue("doorTex")) ?? Resources.FindObjectsOfTypeAll<Texture>().FirstOrDefault(t => t.name == "NissenHut_d");
+
+                Settings.doorsBump = Resources.FindObjectsOfTypeAll<Texture>().FirstOrDefault(t => t.name == settings.GetValue("doorBump")) ?? Resources.FindObjectsOfTypeAll<Texture>().FirstOrDefault(t => t.name == "NissenHut_n");
+
+                if (!settings.GetValue("doorTexScale").TryParse(out Settings.doorsTexScale))
                 {
-                    Settings.doorsSound = true;
+                    Settings.doorsTexScale = new Vector2(2, 3);
                 }
 
-                if (!bool.TryParse(settings.GetValue("editorSunFlares"), out Settings.editorSunFlares))
+                if (!float.TryParse(settings.GetValue("doorGloss"), out Settings.doorsGloss))
                 {
-                    Settings.editorSunFlares = true;
+                    Settings.doorsGloss = 0.4f;
                 }
 
-                Settings.doorTex = Resources.FindObjectsOfTypeAll<Texture>().FirstOrDefault(t => t.name == settings.GetValue("doorTex")) ?? Resources.FindObjectsOfTypeAll<Texture>().FirstOrDefault(t => t.name == "NissenHut_d");
+                Settings.doorsMoveSound = Resources.FindObjectsOfTypeAll<AudioClip>().FirstOrDefault(c => c.name == settings.GetValue("doorsMoveSound"));
 
-                Settings.doorBump = Resources.FindObjectsOfTypeAll<Texture>().FirstOrDefault(t => t.name == settings.GetValue("doorBump")) ?? Resources.FindObjectsOfTypeAll<Texture>().FirstOrDefault(t => t.name == "NissenHut_n");
+                Settings.doorsStopSound = Resources.FindObjectsOfTypeAll<AudioClip>().FirstOrDefault(c => c.name == settings.GetValue("doorsStopSound"));
 
-                if (!settings.GetValue("doorTexScale").TryParse(out Settings.doorTexScale))
-                {
-                    Settings.doorTexScale = new Vector2(2, 3);
-                }
-
-                if (!float.TryParse(settings.GetValue("doorGloss"), out Settings.doorGloss))
-                {
-                    Settings.doorGloss = 0.4f;
-                }
-
-                Settings.doorsMoveSound = settings.GetValue("doorsMoveSound");
-                if (string.IsNullOrEmpty(Settings.doorsMoveSound))
-                {
-                    Settings.doorsMoveSound = "SigmaEditorView/Sounds/DoorMove";
-                }
-
-                Settings.doorsStopSound = settings.GetValue("doorsStopSound");
-                if (string.IsNullOrEmpty(Settings.doorsStopSound))
-                {
-                    Settings.doorsStopSound = "SigmaEditorView/Sounds/DoorStop";
-                }
+                Settings.cargoBtnTexture = Resources.FindObjectsOfTypeAll<Texture2D>().FirstOrDefault(t => t.name == settings.GetValue("cargoBtnTexture"));
             }
         }
     }

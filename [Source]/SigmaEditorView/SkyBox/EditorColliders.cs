@@ -181,14 +181,14 @@ namespace SigmaEditorViewPlugin
                     EditorDoors.doorR = GameObject.CreatePrimitive(PrimitiveType.Cube);
                     MeshRenderer mrL = EditorDoors.doorL.AddOrGetComponent<MeshRenderer>();
                     MeshRenderer mrR = EditorDoors.doorR.AddOrGetComponent<MeshRenderer>();
-                    mrL.material.mainTexture = mrR.material.mainTexture = Settings.doorTex;
-                    mrL.material.mainTextureScale = mrR.material.mainTextureScale = Settings.doorTexScale;
-                    mrL.material.SetTexture("_BumpMap", Settings.doorBump);
-                    mrR.material.SetTexture("_BumpMap", Settings.doorBump);
-                    mrL.material.SetTextureScale("_BumpMap", Settings.doorTexScale);
-                    mrR.material.SetTextureScale("_BumpMap", Settings.doorTexScale);
-                    mrL.material.SetFloat("_Glossiness", Settings.doorGloss);
-                    mrR.material.SetFloat("_Glossiness", Settings.doorGloss);
+                    mrL.material.mainTexture = mrR.material.mainTexture = Settings.doorsTexture;
+                    mrL.material.mainTextureScale = mrR.material.mainTextureScale = Settings.doorsTexScale;
+                    mrL.material.SetTexture("_BumpMap", Settings.doorsBump);
+                    mrR.material.SetTexture("_BumpMap", Settings.doorsBump);
+                    mrL.material.SetTextureScale("_BumpMap", Settings.doorsTexScale);
+                    mrR.material.SetTextureScale("_BumpMap", Settings.doorsTexScale);
+                    mrL.material.SetFloat("_Glossiness", Settings.doorsGloss);
+                    mrR.material.SetFloat("_Glossiness", Settings.doorsGloss);
 
                     EditorDoors.doorL.layer = EditorDoors.doorR.layer = 15;
                     EditorDoors.doorL.transform.localScale = EditorDoors.doorR.transform.localScale = scale.x == 0 ? scale.X(0.1f).Z(scale.z / 2f) : scale.Z(0.1f).X(scale.x / 2f);
