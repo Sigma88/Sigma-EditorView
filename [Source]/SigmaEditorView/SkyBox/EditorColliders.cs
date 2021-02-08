@@ -28,11 +28,11 @@ namespace SigmaEditorViewPlugin
 
         static Dictionary<string, Vector3[]> doors = new Dictionary<string, Vector3[]>
         {
-            { "SPHlvl1", new Vector3[] { new Vector3(-0.55f, 4.3f, 36), new Vector3(19.9f, 8.15f, 0) } },
-            { "SPHlvl2", new Vector3[] { new Vector3(-0.45f, 10, 42), new Vector3(42.75f, 19.36f, 0) } },
+            { "SPHlvl1", new Vector3[] { new Vector3(-0.6f, 4.2f, 35.5f), new Vector3(20, 8.4f, 0) } },
+            { "SPHlvl2", new Vector3[] { new Vector3(-0.45f, 9.85f, 42.5f), new Vector3(42.75f, 19.4f, 0) } },
             { "SPHmodern", new Vector3[] { new Vector3(0, 17, 61), new Vector3(79, 34, 0) } },
-            { "VABlvl2", new Vector3[] { new Vector3(30, 30.9f, 0.375f), new Vector3(0, 62, 27) } },
-            { "VABlvl3", new Vector3[] { new Vector3(37.5f, 29.75f, 0), new Vector3(0, 59.5f, 39.9f) } },
+            { "VABlvl2", new Vector3[] { new Vector3(29, 30.9f, 0.5f), new Vector3(0, 62, 28) } },
+            { "VABlvl3", new Vector3[] { new Vector3(37.5f, 29.75f, 0), new Vector3(0, 59.5f, 40.5f) } },
             { "VABmodern", new Vector3[] { new Vector3(33.75f, 25.25f, 0), new Vector3(0, 50.5f, 43.5f) } }
         };
 
@@ -164,6 +164,41 @@ namespace SigmaEditorViewPlugin
 
                     Debug.Log("EditorColliders.Door", "name = " + wall.name + ", position = " + wall.transform.position + ", scale = " + wall.transform.localScale + ", rotation = " + wall.transform.eulerAngles);
                 }
+
+                // DOORS
+                if (!shadows)
+                {
+                    if (EditorDoors.shadeL) Object.DestroyImmediate(EditorDoors.shadeL);
+                    EditorDoors.shadeL = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                    EditorDoors.shadeL.GetComponent<Renderer>().shadowCastingMode = ShadowCastingMode.ShadowsOnly;
+                    if (EditorDoors.shadeR) Object.DestroyImmediate(EditorDoors.shadeR);
+                    EditorDoors.shadeR = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                    EditorDoors.shadeR.GetComponent<Renderer>().shadowCastingMode = ShadowCastingMode.ShadowsOnly;
+
+                    if (EditorDoors.doorL) Object.DestroyImmediate(EditorDoors.doorL);
+                    EditorDoors.doorL = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                    if (EditorDoors.doorR) Object.DestroyImmediate(EditorDoors.doorR);
+                    EditorDoors.doorR = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                    MeshRenderer mrL = EditorDoors.doorL.AddOrGetComponent<MeshRenderer>();
+                    MeshRenderer mrR = EditorDoors.doorR.AddOrGetComponent<MeshRenderer>();
+                    mrL.material.mainTexture = mrR.material.mainTexture = Settings.doorsTexture;
+                    mrL.material.mainTextureScale = mrR.material.mainTextureScale = Settings.doorsTexScale;
+                    mrL.material.SetTexture("_BumpMap", Settings.doorsBump);
+                    mrR.material.SetTexture("_BumpMap", Settings.doorsBump);
+                    mrL.material.SetTextureScale("_BumpMap", Settings.doorsTexScale);
+                    mrR.material.SetTextureScale("_BumpMap", Settings.doorsTexScale);
+                    mrL.material.SetFloat("_Glossiness", Settings.doorsGloss);
+                    mrR.material.SetFloat("_Glossiness", Settings.doorsGloss);
+
+                    EditorDoors.doorL.layer = EditorDoors.doorR.layer = 15;
+                    EditorDoors.doorL.transform.localScale = EditorDoors.doorR.transform.localScale = scale.x == 0 ? scale.X(0.1f).Z(scale.z / 2f) : scale.Z(0.1f).X(scale.x / 2f);
+                    EditorDoors.shadeL.transform.localScale = EditorDoors.shadeR.transform.localScale = scale.x == 0 ? EditorDoors.doorL.transform.localScale.X(0) : EditorDoors.doorL.transform.localScale.Z(0);
+                    EditorDoors.doorL.transform.position = EditorDoors.shadeL.transform.position = scale.x == 0 ? position.dZ(-EditorDoors.doorL.transform.localScale.z / 2f) : position.dX(-EditorDoors.doorL.transform.localScale.x / 2f);
+                    EditorDoors.doorR.transform.position = EditorDoors.shadeR.transform.position = scale.x == 0 ? position.dZ(EditorDoors.doorL.transform.localScale.z / 2f) : position.dX(EditorDoors.doorL.transform.localScale.x / 2f);
+
+                    EditorDoors.doorL.AddOrGetComponent<EditorDoors.Mover>().open = EditorDoors.shadeL.AddOrGetComponent<EditorDoors.Mover>().open = scale.x == 0 ? EditorDoors.doorL.transform.position.dZ(-EditorDoors.doorL.transform.localScale.z) : EditorDoors.doorL.transform.position.dX(-EditorDoors.doorL.transform.localScale.x);
+                    EditorDoors.doorR.AddOrGetComponent<EditorDoors.Mover>().open = EditorDoors.shadeR.AddOrGetComponent<EditorDoors.Mover>().open = scale.x == 0 ? EditorDoors.doorR.transform.position.dZ(EditorDoors.doorL.transform.localScale.z) : EditorDoors.doorR.transform.position.dX(EditorDoors.doorL.transform.localScale.x);
+                }
             }
         }
 
@@ -215,7 +250,7 @@ namespace SigmaEditorViewPlugin
         {
             Debug.Log("EditorColliders.DebugColliders");
 
-            string path = "GameData/Sigma/EditorView/Debug/Colliders/";
+            string path = "GameData/SigmaEditorView/Debug/Colliders/";
 
             foreach (string name in innerWalls.Keys)
             {
@@ -258,7 +293,7 @@ namespace SigmaEditorViewPlugin
         {
             Debug.Log("EditorColliders.DebugShadows");
 
-            string path = "GameData/Sigma/EditorView/Debug/Shadows/";
+            string path = "GameData/SigmaEditorView/Debug/Shadows/";
 
             foreach (string name in outerWalls.Keys)
             {
@@ -284,7 +319,7 @@ namespace SigmaEditorViewPlugin
             }
         }
 
-        class Remover : MonoBehaviour
+        internal class Remover : MonoBehaviour
         {
             EditorFacility editor;
 

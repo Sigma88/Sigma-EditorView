@@ -6,12 +6,29 @@ namespace SigmaEditorViewPlugin
     [KSPAddon(KSPAddon.Startup.SpaceCentre, false)]
     internal class KSCTriggers : MonoBehaviour
     {
+        void Start()
+        {
+            Camera.main.gameObject.AddOrGetComponent<MainCameraTracker>();
+        }
+
         void Update()
         {
             if (Input.GetMouseButtonDown(0))
             {
                 Debug.Log("KSCTriggers.Update");
                 EditorView.Update();
+            }
+        }
+
+        class MainCameraTracker : MonoBehaviour
+        {
+            void OnPreRender()
+            {
+                if (Input.GetMouseButtonDown(0))
+                {
+                    Debug.Log("KSCTriggers.Update");
+                    EditorFlaresScatterer.Update();
+                }
             }
         }
     }

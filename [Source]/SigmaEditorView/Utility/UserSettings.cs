@@ -17,7 +17,7 @@ namespace SigmaEditorViewPlugin
             }
         }
 
-        static string folder = "GameData/Sigma/EditorView/";
+        static string folder = "GameData/SigmaEditorView/";
         static string file = "Settings";
         internal static string nodeName = "SigmaEditorView";
 

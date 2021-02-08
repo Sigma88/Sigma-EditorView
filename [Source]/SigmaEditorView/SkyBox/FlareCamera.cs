@@ -6,6 +6,7 @@ namespace SigmaEditorViewPlugin
     internal class FlareCamera : MonoBehaviour
     {
         LensFlare flare;
+        MeshRenderer scattererFlare;
         float maxBrightness;
         bool hidden = false;
         static int layerMask = 1 << 00 | 1 << 01 | 1 << 02 | 1 << 03 | 1 << 04 | 1 << 05 | 1 << 06 | 1 << 07 | 1 << 08 | 1 << 09 |
@@ -18,54 +19,96 @@ namespace SigmaEditorViewPlugin
             Debug.Log("FlareCamera.Start");
 
             flare = GetComponent<LensFlare>();
-            maxBrightness = flare.brightness;
 
-            Debug.Log("FlareCamera.Start", "maxBrightness = " + maxBrightness);
-
-            FlareRemover remover = GetComponent<FlareRemover>();
-            if (remover != null)
+            if (flare)
             {
-                DestroyImmediate(remover);
+                Debug.Log("FlareCamera.Start", "flare = " + flare);
+
+                maxBrightness = flare.brightness;
+
+                Debug.Log("FlareCamera.Start", "maxBrightness = " + maxBrightness);
+
+                FlareRemover remover = GetComponent<FlareRemover>();
+                if (remover != null)
+                {
+                    DestroyImmediate(remover);
+                }
+            }
+            else
+            {
+                scattererFlare = GetComponent<MeshRenderer>();
+
+                Debug.Log("FlareCamera.Start", "scattererFlare = " + scattererFlare);
             }
         }
 
         void LateUpdate()
         {
-            CheckHidden();
-
-            if (hidden)
+            if (HighLogic.LoadedSceneIsEditor)
             {
-                Hide();
-            }
-            else
-            {
-                Show();
-            }
+                CheckHidden();
 
-            Track();
+                if (hidden)
+                {
+                    Hide();
+                }
+                else
+                {
+                    Show();
+                }
+
+                Track();
+            }
         }
 
         void CheckHidden()
         {
-            hidden = Physics.Raycast(EditorCamera.Instance.transform.position, flare.transform.forward.normalized * -5000, Mathf.Infinity, layerMask);
+            if (flare)
+            {
+                hidden = Physics.Raycast(EditorCamera.Instance.transform.position, flare.transform.forward.normalized * -5000, Mathf.Infinity, layerMask);
+            }
+            else if (scattererFlare)
+            {
+                hidden = Physics.Raycast(EditorCamera.Instance.cam.ViewportPointToRay(scattererFlare.material.GetVector(ScattererShader.sunViewPortPos)), Mathf.Infinity, layerMask);
+            }
         }
 
         void Show()
         {
-            if (flare.brightness < maxBrightness)
-                flare.brightness += flare.fadeSpeed * Time.deltaTime;
+            if (flare)
+            {
+                if (flare.brightness < maxBrightness)
+                    flare.brightness += flare.fadeSpeed * Time.deltaTime;
 
-            if (flare.brightness > maxBrightness)
-                flare.brightness = maxBrightness;
+                if (flare.brightness > maxBrightness)
+                    flare.brightness = maxBrightness;
+            }
+            else if (scattererFlare)
+            {
+                if (scattererFlare.gameObject.layer != 16)
+                {
+                    scattererFlare.gameObject.layer = 16;
+                }
+            }
         }
 
         void Hide()
         {
-            if (flare.brightness > 0)
-                flare.brightness -= flare.fadeSpeed * Time.deltaTime;
+            if (flare)
+            {
+                if (flare.brightness > 0)
+                    flare.brightness -= flare.fadeSpeed * Time.deltaTime;
 
-            if (flare.brightness < 0)
-                flare.brightness = 0;
+                if (flare.brightness < 0)
+                    flare.brightness = 0;
+            }
+            else if (scattererFlare)
+            {
+                if (scattererFlare.gameObject.layer == 16)
+                {
+                    scattererFlare.gameObject.layer = 10;
+                }
+            }
         }
 
         LineRenderer line;
@@ -79,7 +122,7 @@ namespace SigmaEditorViewPlugin
                     GameObject myLine = new GameObject("lineRenderer");
                     line = myLine.AddOrGetComponent<LineRenderer>();
                     line.transform.position = Camera.main.transform.position + Camera.main.transform.forward.normalized;
-                    line.material = new Material(Shader.Find("Particles/Alpha Blended Premultiply"));
+                    line.material = new Material(Shader.Find("Legacy Shaders/Particles/Alpha Blended Premultiply"));
                     line.startWidth = 0.02f;
                     line.endWidth = 25f;
                 }
@@ -87,8 +130,14 @@ namespace SigmaEditorViewPlugin
                 if (Camera.main?.transform != null)
                     line.SetPosition(0, Camera.main.transform.position + Camera.main.transform.forward.normalized);
 
-                if (transform != null)
-                    line.SetPosition(1, transform.forward.normalized * -5000);
+                if (flare)
+                {
+                    line.SetPosition(1, flare.transform.forward.normalized * -5000);
+                }
+                else if (scattererFlare)
+                {
+                    line.SetPosition(1, EditorCamera.Instance.cam.ViewportToWorldPoint(scattererFlare.material.GetVector(ScattererShader.sunViewPortPos)).normalized * 5000);
+                }
 
                 line.startColor = line.endColor = hidden ? Color.red : Color.green;
             }

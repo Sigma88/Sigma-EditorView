@@ -15,7 +15,7 @@ namespace SigmaEditorViewPlugin
 
             if (groundObject != null)
             {
-                groundObject.layer = 0;
+                //groundObject.layer = 0;
 
                 if (editor == EditorFacility.SPH)
                 {

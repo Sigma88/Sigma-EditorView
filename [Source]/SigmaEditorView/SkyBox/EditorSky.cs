@@ -1,57 +1,74 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Rendering;
 
 
 namespace SigmaEditorViewPlugin
 {
-    static class EditorSky
+    internal class BackgroundCamera : MonoBehaviour
     {
-        static RenderTexture skybox;
-        static RenderTexture scaled;
-        static RenderTexture ground;
+        internal Camera backgroundCamera;
+        Camera foregroundCamera;
+
+        internal void Awake()
+        {
+            foregroundCamera = GetComponent<Camera>();
+        }
+
+        internal void OnPreCull()
+        {
+            backgroundCamera.CopyFrom(foregroundCamera);
+            backgroundCamera.enabled = false;
+            backgroundCamera.worldToCameraMatrix = Matrix4x4.TRS(Vector3.zero, foregroundCamera.worldToCameraMatrix.rotation, Vector3.one);
+            backgroundCamera.backgroundColor = Color.black;
+            backgroundCamera.clearFlags = CameraClearFlags.SolidColor;
+            backgroundCamera.targetTexture = foregroundCamera.targetTexture;
+            backgroundCamera.cullingMask = 1 << 18;
+            backgroundCamera.nearClipPlane = 0.3f;
+            backgroundCamera.farClipPlane = EditorSky.maxdistance;
+            backgroundCamera.transform.position = Vector3.zero;
+            backgroundCamera.Render();
+            backgroundCamera.clearFlags = CameraClearFlags.Depth;
+            backgroundCamera.cullingMask = 1 << 9 | 1 << 10;
+            backgroundCamera.Render();
+        }
+    }
+
+    internal static class EditorSky
+    {
+        static RenderTexture cubemap;
+        static Vector3 vabOffset = new Vector3(110, 50, -50);
+        static Vector3 vabRealOffset;
 
         internal static void Update()
         {
             Debug.Log("EditorSky.Update");
 
-            // Create GameObject and Camera
-            GameObject marker = new GameObject("SigmaEditorView Camera");
-            Camera camera = marker.AddOrGetComponent<Camera>();
+            Transform KSC = SpaceCenter.Instance.SpaceCenterTransform;
+            vabRealOffset = Vector3.Scale(vabOffset, KSC.localScale);
+            vabRealOffset = KSC.right.normalized * vabRealOffset.x + KSC.up.normalized * vabRealOffset.y + KSC.forward.normalized * vabRealOffset.z;
 
-            // Setup Camera
-            camera.farClipPlane = maxdistance;
-            camera.backgroundColor = Color.clear;
+            GameObject foreground = new GameObject("SigmaEditorView Foreground Camera");
+            Camera foregroundCamera = foreground.AddOrGetComponent<Camera>();
 
-            // SkyBox
-            skybox = skybox ?? new RenderTexture(Settings.size, Settings.size, 0) { name = "EditorSky.skybox", dimension = TextureDimension.Cube };
-            camera.cullingMask = 1 << 18;
-            camera.RenderToCubemap(skybox);
+            GameObject background = new GameObject("SigmaEditorView Background Camera");
+            Camera backgroundCamera = background.AddOrGetComponent<Camera>();
 
-            // ScaledSpace and Atmosphere
-            camera.backgroundColor = Color.clear;
-            GameObject Atmosphere = FlightGlobals.GetHomeBody()?.scaledBody?.GetChild("Atmosphere");    // Scatterer compatibility
-            bool? atmoBackUp = Atmosphere?.activeSelf;                                                  // Scatterer compatibility
-            if (atmoBackUp == false) Atmosphere.SetActive(true);                                        // Scatterer compatibility
+            cubemap = cubemap ?? new RenderTexture(Settings.size, Settings.size, 0) { name = "EditorSky.ground", dimension = TextureDimension.Cube };
 
-            scaled = scaled ?? new RenderTexture(Settings.size, Settings.size, 0) { name = "EditorSky.scaled", dimension = TextureDimension.Cube }; //*/ new Cubemap(Settings.size, TextureFormat.RGBA32, false);
-            camera.cullingMask = 1 << 9 | 1 << 10;
-            camera.RenderToCubemap(scaled);
-
-            if (atmoBackUp == false) Atmosphere.SetActive(false);                                       // Scatterer compatibility
-
-            // Ground
-            camera.backgroundColor = Color.black;
-            camera.nearClipPlane = 2000;
-            camera.farClipPlane = 200000;
-            camera.transform.position = SpaceCenter.Instance.SpaceCenterTransform.position - SpaceCenter.Instance.SpaceCenterTransform.up.normalized * 22;
-            ground = ground ?? new RenderTexture(Settings.size, Settings.size, 0) { name = "EditorSky.scaled", dimension = TextureDimension.Cube };
-            camera.cullingMask = 1 << 15;
-            camera.RenderToCubemap(ground);
+            foregroundCamera.enabled = false;
+            foregroundCamera.nearClipPlane = 2000;
+            foregroundCamera.farClipPlane = 200000;
+            foregroundCamera.cullingMask = 1 << 15;
+            foregroundCamera.clearFlags = CameraClearFlags.Depth;
+            foregroundCamera.gameObject.AddOrGetComponent<BackgroundCamera>().backgroundCamera = backgroundCamera;
+            foregroundCamera.transform.position = KSC.position + vabRealOffset;
+            foregroundCamera.RenderToCubemap(cubemap);
 
             // CleanUp
-            Object.DestroyImmediate(camera);
-            Object.DestroyImmediate(marker);
+            Object.DestroyImmediate(foreground);
+            Object.DestroyImmediate(background);
         }
 
         internal static void Apply(EditorFacility editor)
@@ -60,16 +77,14 @@ namespace SigmaEditorViewPlugin
 
             RenderSettings.skybox.shader = ShaderLoader.shader;
 
-            RenderSettings.skybox.SetTexture("_SkyBox", skybox);
-            RenderSettings.skybox.SetTexture("_Scaled", scaled);
-            RenderSettings.skybox.SetTexture("_Ground", ground);
+            RenderSettings.skybox.SetTexture("_CubeMap", cubemap);
 
             RenderSettings.skybox.SetMatrix("_Rotation", EditorView.GetMatrix(editor));
         }
 
         static float? _maxdistance;
 
-        static float maxdistance
+        internal static float maxdistance
         {
             get
             {
