@@ -9,6 +9,7 @@
 - Fixed shadows
 - Fixed Scatterer compatibility
 - Added Scatterer sunflare compatibility
+- Added ability to change the cargo button texture
 
 
 **v0.4.0**
